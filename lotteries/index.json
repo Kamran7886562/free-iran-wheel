@@ -1,0 +1,18 @@
+[
+  {
+    "id": "chanjfs8",
+    "created_at": 1791713437,
+    "prize": "🏆 قرعه‌کشی تستی v2",
+    "status": "waiting",
+    "count": 10,
+    "winner": null
+  },
+  {
+    "id": "371v9sri",
+    "created_at": 1791713407,
+    "prize": "🏆 قرعه‌کشی",
+    "status": "waiting",
+    "count": 10,
+    "winner": null
+  }
+]
