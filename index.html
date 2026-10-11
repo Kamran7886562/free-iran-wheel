@@ -259,9 +259,21 @@ if(!payload||payload.v!==1||!Array.isArray(payload.p)||!payload.p.length){
 if(payload.exp*1000<Date.now()){
   showState('⏰','این لینک منقضی شده است','از ادمین بخواهید لینک جدید بسازد.');throw new Error('expired');}
 
-const P=payload.p.map(x=>({name:String(x[0]||'؟').slice(0,28),uid:String(x[1]||'')})); 
-const WIN=payload.w|0, N=P.length;
-const USED_KEY='lotto_used_'+payload.n;
+let P=[],WIN=0,N=0,USED_KEY='',LIVE_MODE=false;
+let SEG=0;function calcSEG(){SEG=N>0?Math.PI*2/N:0;}
+if(payload&&payload.v===1&&Array.isArray(payload.p)&&payload.p.length){
+  P=payload.p.map(x=>({name:String(x[0]||'؟').slice(0,28),uid:String(x[1]||'')})); 
+  WIN=payload.w|0;N=P.length;USED_KEY='lotto_used_'+payload.n;
+}else if(qs.get('live')==='1'){
+  LIVE_MODE=true; // حالت زنده: از leaderboard.json
+}else if(!payload){
+  showState('🔗','لینک گردونه نامعتبر است','از ربات تلگرام وارد شوید.');throw new Error('bad token');
+}else{
+  showState('🔗','لینک گردونه نامعتبر است','از ربات تلگرام وارد شوید.');throw new Error('bad token');
+}
+if(!LIVE_MODE&&payload&&payload.exp*1000<Date.now()){
+  showState('⏰','این لینک منقضی شده است','از ادمین بخواهید لینک جدید بسازد.');throw new Error('expired');}
+calcSEG();
 
 /* ---------- بررسی یکبارمصرف ---------- */
 async function alreadyUsed(){
@@ -283,7 +295,7 @@ const cv=$('#cv'),ctx=cv.getContext('2d');
 let DPR=1,CW=0;
 function sizeCanvas(){const r=cv.getBoundingClientRect();DPR=Math.min(window.devicePixelRatio||1,3);
   CW=r.width;cv.width=CW*DPR;cv.height=CW*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);drawWheel(curAngle);}
-const SEG=Math.PI*2/N;
+
 let curAngle=0,spinning=false,lastTickSeg=-1;
 
 /* پالت طلایی/نئونی چرخشی */
@@ -532,7 +544,44 @@ function initCountdown(){
   tick();return false;
 }
 /* مقداردهی */
+/* ---------- حالت زنده: خواندن مستقیم از دیتابیس ---------- */
+async function initLiveMode(){
+  const nParam=Math.min(100,Math.max(1,parseInt(qs.get('n')||'10',10)||10));
+  try{
+    const r=await fetch('leaderboard.json?_='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('fetch failed');
+    const d=await r.json();
+    const top=(d.all||[]).slice(0,nParam);
+    if(!top.length)throw new Error('empty');
+    // ساخت آرایه شرکت‌کنندگان دقیقاً از دیتابیس — بدون هیچ داده ثابت
+    P=top.map(u=>({name:String(u.name||'؟').slice(0,28),uid:String(u.uid||'')}));
+    N=P.length;WIN=-1;USED_KEY='live_mode_no_spin';
+    calcSEG();
+  }catch(e){
+    showState('⚠️','خطا در دریافت اطلاعات','اتصال اینترنت را بررسی کنید و دوباره تلاش کنید.');
+    throw new Error('live load failed');
+  }
+}
 (async()=>{
+  // حالت زنده: ابتدا دیتا را بگیر
+  if(LIVE_MODE){
+    try{await initLiveMode();}
+    catch(e){return;}
+    $('#app').classList.add('show');$('#stateBox').innerHTML='';
+    // در حالت زنده شمارش معکوس نداریم
+    sizeCanvas();drawWheel(0);renderWinners('day');
+    document.querySelectorAll('.lb-tab').forEach(t=>t.onclick=()=>{
+      document.querySelectorAll('.lb-tab').forEach(x=>x.classList.remove('on'));
+      t.classList.add('on');renderLB(t.dataset.k);});
+    loadLeaderboard();
+    addEventListener('resize',()=>{sizeCanvas();sizeCfx();});
+    let idle=true;btn.addEventListener('click',()=>idle=false,{once:true});
+    (function idleSpin(){if(!idle||spinning||done)return;
+      curAngle+=.0018;drawWheel(curAngle);requestAnimationFrame(idleSpin);})();
+    // دکمه چرخش در حالت زنده = فقط نمایشی
+    btn.textContent='🎡 چرخش نمایشی';
+    return;
+  }
   if(await alreadyUsed()){
     showState('✅','این قرعه‌کشی قبلاً انجام شده است','نتیجه قبلاً ثبت و برای ربات ارسال شده.');return;}
   $('#app').classList.add('show');$('#stateBox').innerHTML='';
