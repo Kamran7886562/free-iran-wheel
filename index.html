@@ -29,6 +29,8 @@ body{
   padding:calc(14px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
   overflow-x:hidden;user-select:none;-webkit-user-select:none;
 }
+#app{display:none;flex-direction:column;align-items:center;width:100%}
+#app.show{display:flex}
 /* ---------- هدر ---------- */
 .brand{display:flex;flex-direction:column;align-items:center;margin-bottom:10px;animation:fadeDown .7s ease both}
 .brand .ring{font-size:11px;letter-spacing:6px;color:var(--mut);font-weight:500}
@@ -152,7 +154,7 @@ body{
 </style>
 </head>
 <body>
-<div id="app" style="display:none;flex-direction:column;align-items:center;width:100%">
+<div id="app">
   <div class="brand">
     <div class="ring">FREE IRAN LOTTERY</div>
     <h1>🎡 قرعه‌کشی هفتگی</h1>
@@ -223,7 +225,7 @@ const Snd=(()=>{let ctx=null,on=true;
 const qs=new URLSearchParams(location.search);
 const rawT=qs.get('t');
 const payload=rawT&&rawT.includes('.')?b64d(rawT.split('.')[0]):null;
-function showState(ic,h,p){$('#app').style.display='none';
+function showState(ic,h,p){$('#app').classList.remove('show');
   $('#stateBox').innerHTML=`<div class="state"><div class="ic">${ic}</div><h2>${h}</h2><p>${p}</p></div>`;}
 if(!payload||payload.v!==1||!Array.isArray(payload.p)||!payload.p.length){
   showState('🔗','لینک گردونه نامعتبر است','از ربات تلگرام وارد شوید.');throw new Error('bad token');}
@@ -446,7 +448,7 @@ $('#metaLine').textContent=`${faNum(N)} شرکت‌کننده • ${faDate(paylo
 (async()=>{
   if(await alreadyUsed()){
     showState('✅','این قرعه‌کشی قبلاً انجام شده است','نتیجه قبلاً ثبت و برای ربات ارسال شده.');return;}
-  $('#app').style.display='flex';$('#stateBox').innerHTML='';
+  $('#app').classList.add('show');$('#stateBox').innerHTML='';
   sizeCanvas();drawWheel(0);renderWinners('day');
   addEventListener('resize',()=>{sizeCanvas();sizeCfx();});
   /* چرخش آرام معرفی (idle) */
