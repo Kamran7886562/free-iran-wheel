@@ -8,6 +8,14 @@
     "winner": null
   },
   {
+    "id": "7zr4qzgi",
+    "created_at": 1791713476,
+    "prize": "🏆 قرعه‌کشی تستی",
+    "status": "waiting",
+    "count": 10,
+    "winner": null
+  },
+  {
     "id": "371v9sri",
     "created_at": 1791713407,
     "prize": "🏆 قرعه‌کشی",
