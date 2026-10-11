@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎡 قرعه‌کشی Free IRAN</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:Tahoma,'Segoe UI',sans-serif;background:linear-gradient(180deg,#060a14 0%,#0d1526 45%,#060a14 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-x:hidden}
+.top-tag{font-size:12px;color:#8a9bb5;letter-spacing:4px;margin-bottom:8px}
+h1{font-size:24px;color:#ffd700;margin-bottom:4px;text-shadow:0 2px 10px rgba(255,215,0,.35)}
+.sub{font-size:12px;color:#5a6a85;margin-bottom:18px}
+.stage{position:relative;width:min(88vw,340px);height:min(88vw,340px)}
+.ptr{position:absolute;top:-16px;left:50%;transform:translateX(-50%);z-index:20;pointer-events:none}
+.ptr .tri{width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:32px solid #ffd700;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
+.ptr .dot{width:13px;height:13px;background:radial-gradient(circle,#fff8e1,#ffd700);border-radius:50%;margin:3px auto 0;box-shadow:0 0 14px #ffd700}
+.ptr.bounce{animation:pbounce .6s ease}
+@keyframes pbounce{0%,100%{transform:translateX(-50%) translateY(0)}30%{transform:translateX(-50%) translateY(-10px)}60%{transform:translateX(-50%) translateY(3px)}}
+#cv{width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 6px #1a2333,0 0 0 10px #c9a227,0 14px 44px rgba(0,0,0,.65),0 0 70px rgba(255,215,0,.12)}
+.hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fffdf5 0%,#f5d76e 35%,#c9a227 70%,#8b6914 100%);display:flex;align-items:center;justify-content:center;z-index:10;border:2px solid #8b6914;box-shadow:0 6px 18px rgba(0,0,0,.5),inset 0 2px 5px rgba(255,255,255,.6);font-size:11px;font-weight:bold;color:#5a4a0a;line-height:1.35;text-align:center;pointer-events:none}
+#btn{margin-top:26px;padding:15px 60px;font-size:19px;font-weight:bold;font-family:inherit;letter-spacing:.5px;color:#1a1a1a;background:linear-gradient(180deg,#ffefa0 0%,#ffd700 45%,#c9a227 100%);border:none;border-radius:60px;cursor:pointer;box-shadow:0 8px 24px rgba(255,215,0,.3),inset 0 2px 3px rgba(255,255,255,.65);transition:transform .12s,opacity .2s;touch-action:manipulation;min-height:56px}
+#btn:active:not(:disabled){transform:scale(.95)}
+#btn:disabled{background:#2c3547;color:#6b7a94;cursor:not-allowed;box-shadow:none;transform:none}
+#res{margin-top:18px;min-height:64px;text-align:center}
+#res .wname{font-size:28px;font-weight:bold;color:#ffd700;text-shadow:0 0 18px rgba(255,215,0,.55);animation:pop .55s cubic-bezier(.2,1.4,.4,1)}
+#res .wlbl{font-size:13px;color:#8a9bb5;margin-bottom:6px;letter-spacing:2px}
+#res .wsent{font-size:13px;color:#4CAF50;margin-top:8px}
+#tmr{font-size:14px;color:#ffd700;font-weight:bold;min-height:22px;margin-top:4px;letter-spacing:1px;font-variant-numeric:tabular-nums}
+#sndTog{margin-top:10px;font-size:12px;color:#5a6a85;background:none;border:1px solid #2c3547;border-radius:20px;padding:6px 16px;cursor:pointer;font-family:inherit}
+#sndTog.on{color:#ffd700;border-color:#c9a227}
+.err{font-size:16px;color:#ff6b6b;padding:40px 20px;text-align:center;line-height:2}
+.cfetti{position:fixed;top:-12px;z-index:999;pointer-events:none;border-radius:2px}
+@keyframes pop{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes cfall{to{transform:translateY(112vh) rotate(760deg)}}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="top-tag">FREE IRAN LOTTERY</div>
+<h1>🎡 قرعه‌کشی هفتگی</h1>
+<div class="sub">برنده خوش‌شانس این دوره</div>
+<div class="stage">
+<div class="ptr" id="ptr"><div class="tri"></div><div class="dot"></div></div>
+<canvas id="cv"></canvas>
+<div class="hub">FREE<br>IRAN</div>
+</div>
+<button id="btn">🎲 شروع قرعه‌کشی</button>
+<div id="res"></div>
+<div id="tmr"></div>
+<button id="sndTog" class="on">🔊 صدا روشن</button>
+</div>
+<script>
+(function(){
+'use strict';
+/* ============ CONFIG ============ */
+var SPIN_MS = 25000;          // EXACTLY 25 seconds
+var EXTRA_ROUNDS = 5;         // drama rotations
+var DPR_CAP = 2;              // devicePixelRatio cap for perf
+
+/* ============ TELEGRAM ============ */
+var tg = (window.Telegram && window.Telegram.WebApp) || null;
+if (tg) { try { tg.ready(); tg.expand(); } catch(e){} }
+
+/* ============ URL PARAMS ============ */
+var qs = new URLSearchParams(window.location.search);
+function hs(s){var h=0;for(var i=0;i<s.length;i++){h=((h<<5)-h+s.charCodeAt(i))|0;}return Math.abs(h).toString(36);}
+var pRaw = qs.get('p') || '';
+var lockKey = 'frw5_' + hs(pRaw);
+if (qs.get('reset') === '1') { try { localStorage.removeItem(lockKey); } catch(e){} }
+
+/* ============ PARTICIPANTS ============ */
+var parts = [];
+try {
+  var pd = JSON.parse(decodeURIComponent(pRaw));
+  if (Object.prototype.toString.call(pd) === '[object Array]') {
+    for (var pi=0; pi<pd.length; pi++) {
+      var x = pd[pi]; if (!x) continue;
+      if (typeof x === 'string') { if (x) parts.push({name:x, uid:''}); }
+      else if (x.name) { parts.push({name:String(x.name), uid:x.uid?String(x.uid):''}); }
+    }
+  }
+} catch(e){}
+var appEl = document.getElementById('app');
+if (!parts.length) { appEl.innerHTML = '<div class="err">⚠️<br>لینک گردونه نامعتبر است</div>'; return; }
+
+/* ============ DOM ============ */
+var cv = document.getElementById('cv'),
+    ctx = cv.getContext('2d'),
+    btn = document.getElementById('btn'),
+    resEl = document.getElementById('res'),
+    tmrEl = document.getElementById('tmr'),
+    ptrEl = document.getElementById('ptr'),
+    sndBtn = document.getElementById('sndTog');
+
+/* ============ CANVAS DPR SETUP ============ */
+var cssSize = 0;
+function setupCanvas(){
+  var r = cv.getBoundingClientRect();
+  cssSize = Math.min(r.width || 340, 340);
+  var dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+  cv.width = Math.round(cssSize * dpr);
+  cv.height = Math.round(cssSize * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+setupCanvas();
+window.addEventListener('resize', function(){ setupCanvas(); draw(angle); });
+
+/* ============ WHEEL GEOMETRY ============ */
+var N = parts.length,
+    arc = Math.PI * 2 / N,
+    angle = 0;                       // current rotation (radians)
+var cols = ['#a93226','#9a6b0f','#145a32','#154360','#6c3483','#0e6655',
+            '#7b2d26','#1a5276','#7d6608','#4a235a','#943126','#1e8449'];
+
+function draw(a){
+  var S = cssSize || 340, C = S/2, R = S/2 - 4;
+  ctx.clearRect(0,0,S,S);
+  for (var i=0;i<N;i++){
+    var a0=a+i*arc, a1=a0+arc;
+    ctx.beginPath(); ctx.moveTo(C,C); ctx.arc(C,C,R,a0,a1); ctx.closePath();
+    ctx.fillStyle=cols[i%cols.length]; ctx.fill();
+    ctx.strokeStyle='rgba(255,215,0,.55)'; ctx.lineWidth=Math.max(2,S/170); ctx.stroke();
+    // rivet
+    ctx.fillStyle='#ffd700';
+    ctx.beginPath(); ctx.arc(C+(R-6)*Math.cos(a0), C+(R-6)*Math.sin(a0), Math.max(3,S/110), 0, 7); ctx.fill();
+    // label
+    ctx.save(); ctx.translate(C,C); ctx.rotate(a0+arc/2);
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle='#fff';
+    var fs = N>10 ? S/22 : N>6 ? S/17 : S/14;
+    ctx.font='bold '+fs+'px Tahoma,"Segoe UI",sans-serif';
+    ctx.shadowColor='rgba(0,0,0,.8)'; ctx.shadowBlur=6; ctx.shadowOffsetY=2;
+    var nm=parts[i].name, maxCh = N>10?10:14;
+    if (nm.length>maxCh) nm=nm.slice(0,maxCh)+'…';
+    ctx.fillText(nm, R*0.62, 0);
+    ctx.restore();
+  }
+}
+
+/* ============ WAIT FOR FONTS THEN DRAW ============ */
+var fontsReady = false;
+function initDraw(){ draw(angle); }
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(function(){ fontsReady=true; initDraw(); });
+  setTimeout(function(){ if(!fontsReady){ fontsReady=true; initDraw(); } }, 1500);
+} else { initDraw(); }
+
+/* ============ SINGLE-USE LOCK ============ */
+var locked = false;
+try { locked = localStorage.getItem(lockKey) === '1'; } catch(e){}
+if (locked) {
+  btn.disabled = true; btn.textContent = '🔒 پایان یافته';
+  resEl.innerHTML = '<div class="wlbl" style="color:#ff6b6b">🔒 این گردونه قبلاً استفاده شده</div>';
+}
+
+/* ============ SOUND (Web Audio, tick slows with deceleration) ============ */
+var audioCtx = null, soundOn = true;
+function ensureAudio(){
+  if (!audioCtx) { try { audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e){} }
+  if (audioCtx && audioCtx.state==='suspended') { audioCtx.resume(); }
+}
+function tick(intensity){
+  if (!soundOn || !audioCtx) return;
+  try {
+    var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type='square'; o.frequency.value=1200+intensity*800;
+    g.gain.setValueAtTime(0.06+intensity*0.05, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.05);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime+0.06);
+  } catch(e){}
+}
+sndBtn.addEventListener('click', function(){
+  soundOn=!soundOn;
+  sndBtn.textContent = soundOn ? '🔊 صدا روشن' : '🔇 صدا خاموش';
+  sndBtn.classList.toggle('on', soundOn);
+  if (soundOn) ensureAudio();
+});
+
+/* ============ EASING ============ */
+function easeOutCubic(x){ x=Math.min(1,Math.max(0,x)); return 1-Math.pow(1-x,3); }
+
+/* ============ SPIN STATE ============ */
+var spinning=false, spinT0=0, spinStartAngle=0, spinTotal=0, spinWinner=-1,
+    spinEndFired=false, rafId=0, lastTickSeg=-1;
+
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+/* ---- frame(ts): ts is the rAF timestamp arg (NOT Date.now) ---- */
+function frame(ts){
+  if (!spinning) return;
+  var t = ts - spinT0;                    // elapsed ms
+  var p = Math.min(t / SPIN_MS, 1);       // progress [0,1]
+  angle = spinStartAngle + spinTotal * easeOutCubic(p);
+  draw(angle);
+  // timer
+  var rem = Math.max(0, Math.ceil((SPIN_MS - t)/1000));
+  tmrEl.textContent = p<1 ? ('⏱ '+rem+' ثانیه') : '';
+  // tick sound: faster early, slower late
+  var seg = Math.floor((((angle%(Math.PI*2))+Math.PI*2)%(Math.PI*2))/arc);
+  if (seg!==lastTickSeg){ lastTickSeg=seg; tick(1-p); }
+  if (p < 1) {
+    rafId = requestAnimationFrame(frame);
+  } else {
+    finishSpin();
+  }
+}
+
+function finishSpin(){
+  if (spinEndFired) return;               // fire ONCE
+  spinEndFired = true;
+  spinning = false;
+  // SNAP to exact final value
+  angle = spinStartAngle + spinTotal;
+  draw(angle);
+  tmrEl.textContent = '';
+  btn.textContent = '🔒 پایان یافته';
+  // pointer bounce
+  ptrEl.classList.remove('bounce'); void ptrEl.offsetWidth; ptrEl.classList.add('bounce');
+  var w = parts[spinWinner] || {name:'?'};
+  resEl.innerHTML = '<div class="wlbl">برنده قرعه‌کشی</div>'+
+    '<div class="wname">🎉 '+esc(w.name)+' 🎉</div>'+
+    '<div class="wsent">✅ در حال ارسال خودکار جایزه...</div>';
+  if (tg && tg.HapticFeedback) { try{ tg.HapticFeedback.notificationOccurred('success'); }catch(e){} }
+  confetti();
+  // fire spinEnd (single event) + auto-deliver
+  try {
+    var ev = new CustomEvent('spinEnd', {detail:{index:spinWinner}});
+    window.dispatchEvent(ev);
+  } catch(e){}
+  setTimeout(function(){
+    if (tg) {
+      try {
+        tg.sendData(JSON.stringify({action:'lottery_winner', idx:spinWinner, uid:w.uid||'', name:w.name}));
+        var s=resEl.querySelector('.wsent'); if(s) s.textContent='✅ جایزه خودکار ارسال شد';
+      } catch(e){}
+    }
+  }, 1500);
+}
+
+/* ---- visibility: never leave stuck ---- */
+document.addEventListener('visibilitychange', function(){
+  if (!document.hidden && spinning && !spinEndFired) {
+    // rAF may have stalled; recompute from performance.now()
+    cancelAnimationFrame(rafId);
+    var now = performance.now();
+    var t = now - spinT0, p = Math.min(t/SPIN_MS, 1);
+    if (p >= 1) { finishSpin(); }
+    else { rafId = requestAnimationFrame(frame); }
+  }
+});
+
+/* ============ CONFETTI ============ */
+function confetti(){
+  var colors=['#ffd700','#ff6b6b','#4CAF50','#3498db','#e67e22','#9b59b6'];
+  for (var i=0;i<70;i++){
+    (function(i){
+      var c=document.createElement('div');
+      c.className='cfetti';
+      var sz=5+Math.random()*7;
+      c.style.cssText='left:'+(Math.random()*100)+'vw;width:'+sz+'px;height:'+(sz*1.4)+'px;background:'+colors[i%colors.length]+';animation:cfall '+(2+Math.random()*2.2)+'s ease-in forwards;';
+      document.body.appendChild(c);
+      setTimeout(function(){c.remove();}, 4800);
+    })(i);
+  }
+}
+
+/* ============ SPIN BUTTON ============ */
+btn.addEventListener('click', function(){
+  if (spinning || locked) return;         // anti double-click
+  ensureAudio();
+  try { localStorage.setItem(lockKey,'1'); } catch(e){}   // lock at START
+  locked = true; spinning = true; spinEndFired = false; lastTickSeg = -1;
+  btn.disabled = true; btn.textContent = '⏳ در حال چرخش...';
+  resEl.innerHTML = '<div class="wlbl">در حال برگزاری قرعه‌کشی...</div>';
+
+  /* ---- "SERVER-SIDE" prize decision BEFORE spin ---- */
+  var buf = new Uint32Array(1);
+  try { (window.crypto||window.msCrypto).getRandomValues(buf); }
+  catch(e){ buf[0]=Math.floor(Math.random()*4294967296); }
+  spinWinner = buf[0] % N;
+
+  /* ---- exact final rotation: pointer (top = -90°) lands mid-segment ---- */
+  var targetMid = (Math.PI*2) - (spinWinner*arc + arc/2) - Math.PI/2;
+  var norm = ((targetMid - angle) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
+  spinStartAngle = angle;
+  spinTotal = EXTRA_ROUNDS * Math.PI*2 + norm;
+
+  spinT0 = performance.now();
+  rafId = requestAnimationFrame(frame);
+});
+})();
+</script>
+</body>
+</html>
