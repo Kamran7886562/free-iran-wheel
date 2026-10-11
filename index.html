@@ -399,6 +399,13 @@ function targetAngle(){
 function spin(){
   if(spinning||done)return;
   spinning=true;btn.disabled=true;res.innerHTML='';tmr.textContent='';
+  /* انتشار شروع چرخش برای همگام‌سازی بینندگان */
+  try{
+    const spinId='spin_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+    tg&&tg.sendData(JSON.stringify({action:'spin_started',spin_id:spinId,
+      winner_idx:WIN,start_ts:Date.now(),token:rawT}));
+    dlog('sync',true,'رویداد شروع چرخش ارسال شد');
+  }catch(e){dlog('sync',false,'خطا در ارسال رویداد: '+e.message);}
   haptic('medium');
   const from=curAngle,to=targetAngle(),dur=8000+Math.random()*2000,t0=performance.now();
   lastTickSeg=Math.floor(((from% (Math.PI*2))+Math.PI*2)%(Math.PI*2)/SEG);
@@ -418,6 +425,30 @@ function spin(){
   requestAnimationFrame(frame);
 }
 
+/* چرخش همگام برای بینندگان — همان انیمیشن، همزمان */
+function playSyncedSpin(winnerIdx,elapsedMs){
+  if(spinning||done)return;
+  spinning=true;
+  const from=curAngle,to=targetAngleFor(winnerIdx),dur=8000,t0=performance.now()-elapsedMs;
+  lastTickSeg=Math.floor(((from%(Math.PI*2))+Math.PI*2)%(Math.PI*2)/SEG);
+  function frame(now){
+    const t=Math.min(1,(now-t0)/dur),e=easeOutQuint(t);
+    curAngle=from+(to-from)*e;
+    const seg=Math.floor((((curAngle%(Math.PI*2))+Math.PI*2)%(Math.PI*2))/SEG);
+    if(seg!==lastTickSeg){lastTickSeg=seg;Snd.tick(.4+.6*(1-t));
+      ptr.classList.remove('hit');void ptr.offsetWidth;ptr.classList.add('hit');}
+    drawWheel(curAngle);
+    if(t<1)requestAnimationFrame(frame);
+    else{spinning=false;done=true;curAngle=curAngle%(Math.PI*2);drawWheel(curAngle);
+      const w=P[winnerIdx];Snd.fanfare();launchConfetti();
+      res.innerHTML=`<div class="wl">✨ برنده قرعه‌کشی ✨</div><div class="wn">${esc(w.name)}</div>`;}
+  }
+  requestAnimationFrame(frame);
+}
+function targetAngleFor(idx){
+  const turns=6+Math.random()*2;
+  return curAngle+turns*Math.PI*2+((3*Math.PI/2-((idx+.5)*SEG))-curAngle%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+}
 function finish(){
   spinning=false;done=true;tmr.textContent='';
   curAngle=curAngle%(Math.PI*2);drawWheel(curAngle);
@@ -490,6 +521,36 @@ function renderWinners(kind){
         <div class="mt">${faDate(w.ts||0)} • ${faTime(w.ts||0)}</div></div>
         <div class="prz">${esc(w.prize||'')}</div></div>`;}).join('');
   });
+}
+/* ---------- تشخیص ادمین ---------- */
+function isAdminViewer(){
+  try{
+    const uid=window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initDataUnsafe&&Telegram.WebApp.initDataUnsafe.user
+      ?String(Telegram.WebApp.initDataUnsafe.user.id):null;
+    return uid&&payload.admin&&uid===String(payload.admin);
+  }catch(e){return false;}
+}
+/* ---------- همگام‌سازی زنده ---------- */
+let lastSpinId=null,liveSyncTimer=null;
+async function startLiveSync(){
+  dlog('sync',true,'شروع همگام‌سازی زنده');
+  const poll=async()=>{
+    try{
+      const r=await fetch('live_spin.json?_='+Date.now(),{cache:'no-store'});
+      if(r.ok){
+        const d=await r.json();
+        if(d.spin_id&&d.spin_id!==lastSpinId&&!spinning&&!done){
+          lastSpinId=d.spin_id;
+          // شروع انیمیشن همگام
+          const elapsed=Date.now()-(d.start_ts||Date.now());
+          dlog('sync',true,`چرخش زنده دریافت شد (تاخیر ${elapsed}ms)`);
+          playSyncedSpin(d.winner_idx|0,Math.max(0,elapsed));
+        }
+      }
+    }catch(e){}
+    liveSyncTimer=setTimeout(poll,1500);
+  };
+  poll();
 }
 /* ---------- برترین دعوت‌کنندگان ---------- */
 let lbData=null;
@@ -588,6 +649,8 @@ function initCountdown(){
     document.querySelectorAll('.lb-tab').forEach(x=>x.classList.remove('on'));
     t.classList.add('on');renderLB(t.dataset.k);});
   loadLeaderboard();
+  /* ---------- همگام‌سازی زنده چرخش ---------- */
+  if(!isAdminViewer())startLiveSync();
   addEventListener('resize',()=>{sizeCanvas();sizeCfx();});
   /* چرخش آرام معرفی (idle) */
   let idle=true;btn.addEventListener('click',()=>idle=false,{once:true});
