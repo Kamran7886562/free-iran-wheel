@@ -72,6 +72,13 @@ body{
   text-shadow:0 1px 0 rgba(255,255,255,.55)}
 .hub .t2{font-size:clamp(7px,2vw,9px);font-weight:700;color:#6b5310;letter-spacing:3px;margin-top:1px}
 .hub .lion{font-size:clamp(13px,4vw,17px);margin-bottom:1px}
+/* ---------- شمارش معکوس ---------- */
+#countdown{display:none;gap:8px;margin-top:14px;direction:ltr}
+.cdbox{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;
+  backdrop-filter:blur(10px);min-width:64px;padding:10px 6px;text-align:center}
+.cdbox .num{font-size:24px;font-weight:900;color:var(--gold);font-variant-numeric:tabular-nums}
+.cdbox .lbl{font-size:10px;color:var(--mut);margin-top:2px}
+#cdmsg{font-size:13px;color:var(--mut);margin-top:10px;text-align:center}
 /* ---------- دکمه ---------- */
 #spinBtn{margin-top:26px;position:relative;padding:16px 16px;font-size:19px;font-weight:800;font-family:inherit;
   width:min(80vw,300px);max-width:100%;
@@ -168,6 +175,13 @@ body{
     <canvas id="cv"></canvas>
     <div class="hub"><div class="lion">🦁</div><div class="t1">FREE<br>IRAN</div><div class="t2">LOTTERY</div></div>
   </div>
+  <div id="countdown">
+    <div class="cdbox"><div class="num" id="cdD">۰۰</div><div class="lbl">روز</div></div>
+    <div class="cdbox"><div class="num" id="cdH">۰۰</div><div class="lbl">ساعت</div></div>
+    <div class="cdbox"><div class="num" id="cdM">۰۰</div><div class="lbl">دقیقه</div></div>
+    <div class="cdbox"><div class="num" id="cdS">۰۰</div><div class="lbl">ثانیه</div></div>
+  </div>
+  <div id="cdmsg"></div>
   <button id="spinBtn">🎲 شروع قرعه‌کشی</button>
   <div id="tmr"></div>
   <div id="res"></div>
@@ -447,11 +461,32 @@ $('#sndTog').onclick=e=>{const on=Snd.toggle();e.target.textContent=on?'🔊 ص�
 $('#prizeLbl').textContent='🏆 '+ (payload.prize||'برنده خوش‌شانس این دوره');
 $('#metaLine').textContent=`${faNum(N)} شرکت‌کننده • ${faDate(payload.ts||Date.now()/1000)}`;
 
+/* ---------- شمارش معکوس ---------- */
+function initCountdown(){
+  const startTs=(payload.start||0)*1000,now=Date.now();
+  if(startTs<=now)return true; /* شروع شده */
+  const cd=$('#countdown'),msg=$('#cdmsg');
+  cd.style.display='flex';btn.disabled=true;
+  btn.textContent='⏳ به‌زودی شروع می‌شود';
+  function tick(){
+    const diff=startTs-Date.now();
+    if(diff<=0){cd.style.display='none';msg.textContent='';
+      btn.disabled=false;btn.textContent='🎲 شروع قرعه‌کشی';haptic('medium');return true;}
+    const d=Math.floor(diff/864e5),h=Math.floor(diff/36e5)%24,m=Math.floor(diff/6e4)%60,s=Math.floor(diff/1e3)%60;
+    $('#cdD').textContent=faNum(d);$('#cdH').textContent=faNum(h);
+    $('#cdM').textContent=faNum(m);$('#cdS').textContent=faNum(s);
+    const dt=new Date(startTs);
+    msg.textContent=`🕐 شروع: ${dt.toLocaleDateString('fa-IR')} ساعت ${dt.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
+    setTimeout(tick,1000);return false;
+  }
+  tick();return false;
+}
 /* مقداردهی */
 (async()=>{
   if(await alreadyUsed()){
     showState('✅','این قرعه‌کشی قبلاً انجام شده است','نتیجه قبلاً ثبت و برای ربات ارسال شده.');return;}
   $('#app').classList.add('show');$('#stateBox').innerHTML='';
+  initCountdown();
   sizeCanvas();drawWheel(0);renderWinners('day');
   addEventListener('resize',()=>{sizeCanvas();sizeCfx();});
   /* چرخش آرام معرفی (idle) */
