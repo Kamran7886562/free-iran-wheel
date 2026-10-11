@@ -278,12 +278,13 @@ if(payload&&payload.v===1&&Array.isArray(payload.p)&&payload.p.length){
   P=payload.p.map(x=>({name:String(x[0]||'؟').slice(0,28),uid:String(x[1]||'')})); 
   WIN=payload.w|0;N=P.length;USED_KEY='lotto_used_'+payload.n;
   dlog('token',true,`توکن معتبر: ${N} شرکت‌کننده`);
-}else if(qs.get('live')==='1'){
-  LIVE_MODE=true;dlog('mode',true,'حالت زنده (live)'); // حالت زنده: از leaderboard.json
-}else if(!payload){
+}else if(rawT){
+  // توکن وجود دارد ولی نامعتبر است
+  dlog('token',false,'توکن نامعتبر است');
   showState('🔗','لینک گردونه نامعتبر است','از ربات تلگرام وارد شوید.');throw new Error('bad token');
 }else{
-  showState('🔗','لینک گردونه نامعتبر است','از ربات تلگرام وارد شوید.');throw new Error('bad token');
+  // بدون توکن → حالت زنده پیش‌فرض
+  LIVE_MODE=true;dlog('mode',true,'حالت زنده (پیش‌فرض)');
 }
 if(!LIVE_MODE&&payload&&payload.exp*1000<Date.now()){
   showState('⏰','این لینک منقضی شده است','از ادمین بخواهید لینک جدید بسازد.');throw new Error('expired');}
