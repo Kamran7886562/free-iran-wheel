@@ -195,6 +195,10 @@ body{
     </div>
     <div id="wlist"><div class="wempty">در حال بارگذاری…</div></div>
   </div>
+  <div class="card">
+    <div class="whead"><h2>🏆 برترین دعوت‌کنندگان</h2></div>
+    <div id="toplist"><div class="wempty">در حال بارگذاری…</div></div>
+  </div>
   <div class="meta" id="metaLine"></div>
 </div>
 <div id="stateBox"></div>
@@ -449,6 +453,23 @@ function renderWinners(kind){
         <div class="prz">${esc(w.prize||'')}</div></div>`;}).join('');
   });
 }
+/* ---------- برترین دعوت‌کنندگان ---------- */
+async function loadLeaderboard(){
+  try{
+    const r=await fetch('leaderboard.json?_='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw 0;
+    const d=await r.json(),top=(d.top||[]).slice(0,10),box=$('#toplist');
+    if(!top.length){box.innerHTML='<div class="wempty">هنوز کسی دعوت نکرده 🚀</div>';return;}
+    const medals=['🥇','🥈','🥉'];
+    box.innerHTML=top.map((u,i)=>{
+      const rk=i<3?`r${i+1}`:'';
+      const medal=i<3?medals[i]:'';
+      return `<div class="wrow" style="animation-delay:${i*40}ms">
+        <div class="rk ${rk}">${i<3?medal:faNum(i+1)}</div>
+        <div class="inf"><div class="nm">${esc(u.name||'؟')}</div></div>
+        <div class="prz">📨 ${faNum(u.invites||0)} دعوت</div></div>`;}).join('');
+  }catch(e){$('#toplist').innerHTML='<div class="wempty">خطا در بارگذاری</div>';}
+}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
   t.classList.add('on');renderWinners(t.dataset.k);});
@@ -487,7 +508,7 @@ function initCountdown(){
     showState('✅','این قرعه‌کشی قبلاً انجام شده است','نتیجه قبلاً ثبت و برای ربات ارسال شده.');return;}
   $('#app').classList.add('show');$('#stateBox').innerHTML='';
   initCountdown();
-  sizeCanvas();drawWheel(0);renderWinners('day');
+  sizeCanvas();drawWheel(0);renderWinners('day');loadLeaderboard();
   addEventListener('resize',()=>{sizeCanvas();sizeCfx();});
   /* چرخش آرام معرفی (idle) */
   let idle=true;btn.addEventListener('click',()=>idle=false,{once:true});
