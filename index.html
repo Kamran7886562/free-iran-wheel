@@ -189,14 +189,14 @@ body{
   <div class="card">
     <div class="whead"><h2>🏆 تالار برندگان</h2></div>
     <div class="tabs">
-      <button class="tab on" data-k="day">امروز</button>
-      <button class="tab" data-k="week">این هفته</button>
-      <button class="tab" data-k="month">این ماه</button>
+      <button class="tab w-tab on" data-k="day">امروز</button>
+      <button class="tab w-tab" data-k="week">این هفته</button>
+      <button class="tab w-tab" data-k="month">این ماه</button>
     </div>
     <div id="wlist"><div class="wempty">در حال بارگذاری…</div></div>
   </div>
   <div class="card">
-    <div class="whead"><h2>🏆 برترین دعوت‌کنندگان</h2></div>
+    <div class="whead"><h2>🏆 برترین دعوت‌کنندگان</h2><span id="lbUpdated" style="font-size:10px;color:var(--mut2)"></span></div>
     <div class="tabs">
       <button class="tab lb-tab" data-k="day">امروز</button>
       <button class="tab lb-tab" data-k="week">هفته</button>
@@ -474,18 +474,33 @@ function renderLB(kind){
       <div class="inf"><div class="nm">${esc(u.name||'؟')}</div></div>
       <div class="prz">📨 ${faNum(u.invites||0)} دعوت</div></div>`;}).join('');
 }
-async function loadLeaderboard(){
+let lbTimer=null;
+async function loadLeaderboard(silent){
   try{
     const r=await fetch('leaderboard.json?_='+Date.now(),{cache:'no-store'});
     if(!r.ok)throw 0;
-    lbData=await r.json();renderLB('all');
-    document.querySelectorAll('.lb-tab').forEach(t=>t.onclick=()=>{
-      document.querySelectorAll('.lb-tab').forEach(x=>x.classList.remove('on'));
-      t.classList.add('on');renderLB(t.dataset.k);});
-  }catch(e){$('#toplist').innerHTML='<div class="wempty">خطا در بارگذاری</div>';}
+    const fresh=await r.json();
+    // فقط اگر تغییر واقعی داشت به‌روز کن
+    const freshStr=JSON.stringify(fresh.all||[]);
+    const oldStr=lbData?JSON.stringify(lbData.all||[]):'';
+    lbData=fresh;
+    const curTab=document.querySelector('.lb-tab.on');
+    renderLB(curTab?curTab.dataset.k:'all');
+    // نمایش زمان به‌روزرسانی
+    try{
+      const dt=new Date((fresh.updated||Date.now()/1000)*1000);
+      $('#lbUpdated').textContent='🕐 '+dt.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+    }catch(e){}
+    if(!silent&&freshStr!==oldStr)console.log('Leaderboard refreshed');
+  }catch(e){
+    if(!silent)$('#toplist').innerHTML='<div class="wempty">⚠️ خطا در دریافت اطلاعات<br><span style="font-size:11px">اتصال اینترنت را بررسی کنید</span></div>';
+  }
+  // به‌روزرسانی خودکار هر ۵ دقیقه
+  if(lbTimer)clearTimeout(lbTimer);
+  lbTimer=setTimeout(()=>loadLeaderboard(true),3e5);
 }
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+document.querySelectorAll('.w-tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.w-tab').forEach(x=>x.classList.remove('on'));
   t.classList.add('on');renderWinners(t.dataset.k);});
 
 /* دکمه صدا */
@@ -522,7 +537,11 @@ function initCountdown(){
     showState('✅','این قرعه‌کشی قبلاً انجام شده است','نتیجه قبلاً ثبت و برای ربات ارسال شده.');return;}
   $('#app').classList.add('show');$('#stateBox').innerHTML='';
   initCountdown();
-  sizeCanvas();drawWheel(0);renderWinners('day');loadLeaderboard();
+  sizeCanvas();drawWheel(0);renderWinners('day');
+  document.querySelectorAll('.lb-tab').forEach(t=>t.onclick=()=>{
+    document.querySelectorAll('.lb-tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');renderLB(t.dataset.k);});
+  loadLeaderboard();
   addEventListener('resize',()=>{sizeCanvas();sizeCfx();});
   /* چرخش آرام معرفی (idle) */
   let idle=true;btn.addEventListener('click',()=>idle=false,{once:true});
