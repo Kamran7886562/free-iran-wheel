@@ -197,6 +197,12 @@ body{
   </div>
   <div class="card">
     <div class="whead"><h2>🏆 برترین دعوت‌کنندگان</h2></div>
+    <div class="tabs">
+      <button class="tab lb-tab" data-k="day">امروز</button>
+      <button class="tab lb-tab" data-k="week">هفته</button>
+      <button class="tab lb-tab" data-k="month">ماه</button>
+      <button class="tab lb-tab on" data-k="all">کل</button>
+    </div>
     <div id="toplist"><div class="wempty">در حال بارگذاری…</div></div>
   </div>
   <div class="meta" id="metaLine"></div>
@@ -454,20 +460,28 @@ function renderWinners(kind){
   });
 }
 /* ---------- برترین دعوت‌کنندگان ---------- */
+let lbData=null;
+function renderLB(kind){
+  const box=$('#toplist');
+  if(!lbData){box.innerHTML='<div class="wempty">در حال بارگذاری…</div>';return;}
+  const top=(lbData[kind]||[]).slice(0,10);
+  if(!top.length){box.innerHTML='<div class="wempty">در این بازه دعوتی ثبت نشده 🚀</div>';return;}
+  const medals=['🥇','🥈','🥉'];
+  box.innerHTML=top.map((u,i)=>{
+    const rk=i<3?`r${i+1}`:'',medal=i<3?medals[i]:'';
+    return `<div class="wrow" style="animation-delay:${i*40}ms">
+      <div class="rk ${rk}">${i<3?medal:faNum(i+1)}</div>
+      <div class="inf"><div class="nm">${esc(u.name||'؟')}</div></div>
+      <div class="prz">📨 ${faNum(u.invites||0)} دعوت</div></div>`;}).join('');
+}
 async function loadLeaderboard(){
   try{
     const r=await fetch('leaderboard.json?_='+Date.now(),{cache:'no-store'});
     if(!r.ok)throw 0;
-    const d=await r.json(),top=(d.top||[]).slice(0,10),box=$('#toplist');
-    if(!top.length){box.innerHTML='<div class="wempty">هنوز کسی دعوت نکرده 🚀</div>';return;}
-    const medals=['🥇','🥈','🥉'];
-    box.innerHTML=top.map((u,i)=>{
-      const rk=i<3?`r${i+1}`:'';
-      const medal=i<3?medals[i]:'';
-      return `<div class="wrow" style="animation-delay:${i*40}ms">
-        <div class="rk ${rk}">${i<3?medal:faNum(i+1)}</div>
-        <div class="inf"><div class="nm">${esc(u.name||'؟')}</div></div>
-        <div class="prz">📨 ${faNum(u.invites||0)} دعوت</div></div>`;}).join('');
+    lbData=await r.json();renderLB('all');
+    document.querySelectorAll('.lb-tab').forEach(t=>t.onclick=()=>{
+      document.querySelectorAll('.lb-tab').forEach(x=>x.classList.remove('on'));
+      t.classList.add('on');renderLB(t.dataset.k);});
   }catch(e){$('#toplist').innerHTML='<div class="wempty">خطا در بارگذاری</div>';}
 }
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
