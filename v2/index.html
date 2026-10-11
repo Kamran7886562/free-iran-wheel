@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e17">
+<title>🎡 قرعه‌کشی Free IRAN</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#ffd700; --gold-d:#c9a227; --gold-l:#ffefa0;
+  --bg0:#05070d; --bg1:#0a0e17; --bg2:#101827;
+  --glass:rgba(255,255,255,.06); --glass-b:rgba(255,215,0,.18);
+  --txt:#f2f5fa; --mut:#8a9bb5; --mut2:#5a6a85;
+  --neon:#00e5ff; --danger:#ff5b6e; --ok:#3ddc84;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{overflow-x:hidden;scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+html,body{height:100%;max-width:100vw}
+body{
+  font-family:'Vazirmatn',Tahoma,sans-serif;color:var(--txt);
+  background:
+    radial-gradient(1200px 600px at 50% -10%,rgba(255,215,0,.07),transparent 60%),
+    radial-gradient(900px 500px at 85% 110%,rgba(0,229,255,.05),transparent 60%),
+    linear-gradient(180deg,var(--bg0),var(--bg1) 45%,var(--bg0));
+  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;
+  padding:calc(14px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+  overflow-x:hidden;user-select:none;-webkit-user-select:none;
+}
+#app{display:none;flex-direction:column;align-items:center;width:100%}
+#app.show{display:flex}
+/* ---------- هدر ---------- */
+.brand{display:flex;flex-direction:column;align-items:center;margin-bottom:10px;animation:fadeDown .7s ease both}
+.brand .ring{font-size:11px;letter-spacing:6px;color:var(--mut);font-weight:500}
+.brand h1{font-size:clamp(22px,6vw,30px);font-weight:900;color:var(--gold);
+  text-shadow:0 2px 14px rgba(255,215,0,.35),0 0 44px rgba(255,215,0,.12);margin-top:2px}
+.brand .sub{font-size:12px;color:var(--mut2);margin-top:2px}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+/* ---------- استیج گردونه ---------- */
+.stage{position:relative;width:min(80vw,340px);height:min(80vw,340px);margin-top:6px;flex:none;max-width:100%}
+/* هاله نور پشت گردونه */
+.stage::before{content:'';position:absolute;inset:-8%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,215,0,.14),rgba(255,215,0,.03) 55%,transparent 70%);
+  filter:blur(6px);pointer-events:none;animation:halo 4s ease-in-out infinite}
+@keyframes halo{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}
+/* عقربه */
+.ptr{position:absolute;top:-14px;left:50%;transform:translateX(-50%);z-index:30;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.ptr .tri{width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;
+  border-top:30px solid var(--gold);position:relative}
+.ptr .tri::after{content:'';position:absolute;left:-15px;top:-30px;border-left:15px solid transparent;
+  border-right:15px solid transparent;border-top:30px solid rgba(255,255,255,.35);
+  clip-path:polygon(0 0,38% 0,30% 100%,0 100%)}
+.ptr .pin{width:14px;height:14px;margin:4px auto 0;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--gold) 60%,#8b6914);
+  box-shadow:0 0 16px rgba(255,215,0,.8)}
+.ptr.hit{animation:phit .18s ease}
+@keyframes phit{0%{transform:translateX(-50%) rotate(0)}40%{transform:translateX(-50%) rotate(-9deg)}100%{transform:translateX(-50%) rotate(0)}}
+#cv{width:100%;height:100%;border-radius:50%;display:block;position:relative;z-index:5;
+  box-shadow:0 0 0 7px #141c2c,0 0 0 9px #2a2113,0 0 0 13px var(--gold-d),
+    0 18px 50px rgba(0,0,0,.7),0 0 90px rgba(255,215,0,.14)}
+/* هاب مرکزی */
+.hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;pointer-events:none;
+  width:26%;height:26%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 34% 28%,#fffdf4 0%,#f7dd7e 30%,#d4af37 58%,#8b6914 82%,#5e470c 100%);
+  border:2px solid rgba(90,70,10,.9);
+  box-shadow:0 8px 22px rgba(0,0,0,.55),inset 0 3px 8px rgba(255,255,255,.75),inset 0 -6px 12px rgba(90,70,10,.5)}
+.hub .t1{font-size:clamp(9px,2.6vw,12px);font-weight:900;color:#4a3805;letter-spacing:1px;line-height:1.25;text-align:center;
+  text-shadow:0 1px 0 rgba(255,255,255,.55)}
+.hub .t2{font-size:clamp(7px,2vw,9px);font-weight:700;color:#6b5310;letter-spacing:3px;margin-top:1px}
+.hub .lion{font-size:clamp(13px,4vw,17px);margin-bottom:1px}
+/* ---------- شمارش معکوس ---------- */
+#countdown{display:none;gap:8px;margin-top:14px;direction:ltr}
+.cdbox{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;
+  backdrop-filter:blur(10px);min-width:64px;padding:10px 6px;text-align:center}
+.cdbox .num{font-size:24px;font-weight:900;color:var(--gold);font-variant-numeric:tabular-nums}
+.cdbox .lbl{font-size:10px;color:var(--mut);margin-top:2px}
+#cdmsg{font-size:13px;color:var(--mut);margin-top:10px;text-align:center}
+/* ---------- دکمه ---------- */
+#spinBtn{margin-top:26px;position:relative;padding:16px 16px;font-size:19px;font-weight:800;font-family:inherit;
+  width:min(80vw,300px);max-width:100%;
+  color:#231a02;background:linear-gradient(180deg,var(--gold-l),var(--gold) 45%,var(--gold-d));
+  border:none;border-radius:60px;cursor:pointer;letter-spacing:.5px;
+  box-shadow:0 10px 30px rgba(255,215,0,.32),inset 0 2px 4px rgba(255,255,255,.7),inset 0 -3px 6px rgba(120,85,0,.35);
+  transition:transform .12s,box-shadow .2s,opacity .2s;touch-action:manipulation;min-height:58px;overflow:hidden}
+#spinBtn::after{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 3.2s ease infinite}
+@keyframes shine{0%{left:-80%}55%,100%{left:130%}}
+#spinBtn:active:not(:disabled){transform:scale(.94)}
+#spinBtn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+#spinBtn:disabled::after{display:none}
+/* ---------- نتیجه ---------- */
+#res{margin-top:16px;min-height:70px;text-align:center;width:100%;max-width:420px}
+#res .wl{font-size:12px;color:var(--mut);letter-spacing:3px;margin-bottom:6px}
+#res .wn{font-size:clamp(26px,7vw,34px);font-weight:900;color:var(--gold);
+  text-shadow:0 0 24px rgba(255,215,0,.6);animation:pop .6s cubic-bezier(.2,1.5,.35,1) both}
+#res .ws{font-size:13px;color:var(--ok);margin-top:8px}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+#tmr{font-size:13px;color:var(--gold);font-weight:700;min-height:20px;margin-top:6px;letter-spacing:1px;font-variant-numeric:tabular-nums}
+/* ---------- کارت شیشه‌ای ---------- */
+.card{background:var(--glass);border:1px solid var(--glass-b);border-radius:20px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 12px 34px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.09);
+  padding:16px;width:100%;max-width:440px;margin-top:18px}
+/* ---------- برندگان ---------- */
+.whead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.whead h2{font-size:16px;font-weight:800;color:var(--gold)}
+.tabs{display:flex;gap:6px;background:rgba(0,0,0,.3);border-radius:14px;padding:4px;margin-bottom:12px}
+.tab{flex:1;border:none;background:none;color:var(--mut);font-family:inherit;font-size:12.5px;font-weight:700;
+  padding:9px 4px;border-radius:10px;cursor:pointer;transition:all .2s}
+.tab.on{background:linear-gradient(180deg,rgba(255,215,0,.22),rgba(255,215,0,.1));color:var(--gold);
+  box-shadow:inset 0 0 0 1px rgba(255,215,0,.3)}
+#wlist{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;padding:2px}
+.wrow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:9px 12px;animation:fadeDown .4s ease both}
+.wrow .rk{width:30px;height:30px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:14px;background:linear-gradient(180deg,#3a2f10,#1c1607);color:var(--gold);
+  border:1px solid rgba(255,215,0,.35)}
+.wrow .rk.r1{background:linear-gradient(180deg,#ffefa0,#c9a227);color:#231a02;box-shadow:0 0 14px rgba(255,215,0,.5)}
+.wrow .rk.r2{background:linear-gradient(180deg,#e8edf5,#9aa7bd);color:#1c2330}
+.wrow .rk.r3{background:linear-gradient(180deg,#f0b08a,#a06a3c);color:#2a1708}
+.wrow .inf{flex:1;min-width:0}
+.wrow .nm{font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrow .mt{font-size:11px;color:var(--mut2);margin-top:1px}
+.wrow .prz{font-size:11px;color:var(--neon);font-weight:700;white-space:nowrap}
+.wempty{text-align:center;color:var(--mut2);font-size:13px;padding:18px}
+/* ---------- مودال برنده ---------- */
+#modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:22px;
+  background:rgba(3,5,10,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#modal.show{display:flex}
+.mbox{width:100%;max-width:360px;text-align:center;background:linear-gradient(180deg,rgba(30,26,10,.92),rgba(12,10,4,.95));
+  border:1px solid rgba(255,215,0,.4);border-radius:26px;padding:30px 22px;position:relative;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 60px rgba(255,215,0,.18),inset 0 1px 0 rgba(255,255,255,.15);
+  animation:mIn .55s cubic-bezier(.2,1.4,.35,1) both}
+@keyframes mIn{from{transform:scale(.7) translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.mbox::before{content:'';position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent,rgba(255,215,0,.12),transparent 30%);
+  animation:spinRay 5s linear infinite;pointer-events:none}
+@keyframes spinRay{to{transform:rotate(360deg)}}
+.mbox .cr{font-size:52px;animation:bounce 1s ease infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.mbox h3{font-size:13px;color:var(--mut);letter-spacing:3px;margin:8px 0 4px}
+.mbox .bw{font-size:clamp(28px,8vw,36px);font-weight:900;color:var(--gold);
+  text-shadow:0 0 30px rgba(255,215,0,.7);margin:4px 0;position:relative}
+.mbox .bd{font-size:12.5px;color:var(--mut);line-height:2;position:relative}
+.mbox .bd b{color:var(--txt)}
+#mclose{margin-top:18px;padding:12px 44px;font-family:inherit;font-size:15px;font-weight:800;color:#231a02;
+  background:linear-gradient(180deg,var(--gold-l),var(--gold-d));border:none;border-radius:40px;cursor:pointer;position:relative}
+/* ---------- خطا / وضعیت ---------- */
+.state{padding:46px 24px;text-align:center;line-height:2.1;max-width:420px}
+.state .ic{font-size:56px;margin-bottom:10px}
+.state h2{font-size:20px;font-weight:800;color:var(--gold);margin-bottom:6px}
+.state p{font-size:14px;color:var(--mut)}
+/* کانفتی */
+#cfx{position:fixed;inset:0;z-index:99;pointer-events:none}
+/* دکمه صدا */
+#sndTog{margin-top:12px;font-size:12px;color:var(--mut2);background:none;border:1px solid #26314a;
+  border-radius:20px;padding:7px 18px;cursor:pointer;font-family:inherit;transition:all .2s}
+#sndTog.on{color:var(--gold);border-color:var(--gold-d)}
+.meta{margin-top:14px;font-size:11px;color:var(--mut2);letter-spacing:1px;text-align:center}
+@media (max-height:700px){.stage{width:min(80vw,300px);height:min(80vw,300px)}#spinBtn{margin-top:16px;padding:13px 52px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="brand">
+    <div class="ring">FREE IRAN LOTTERY</div>
+    <h1>🎡 قرعه‌کشی هفتگی</h1>
+    <div class="sub" id="prizeLbl">برنده خوش‌شانس این دوره</div>
+  </div>
+  <div class="stage">
+    <div class="ptr" id="ptr"><div class="tri"></div><div class="pin"></div></div>
+    <canvas id="cv"></canvas>
+    <div class="hub"><div class="lion">🦁</div><div class="t1">FREE<br>IRAN</div><div class="t2">LOTTERY</div></div>
+  </div>
+  <div id="countdown">
+    <div class="cdbox"><div class="num" id="cdD">۰۰</div><div class="lbl">روز</div></div>
+    <div class="cdbox"><div class="num" id="cdH">۰۰</div><div class="lbl">ساعت</div></div>
+    <div class="cdbox"><div class="num" id="cdM">۰۰</div><div class="lbl">دقیقه</div></div>
+    <div class="cdbox"><div class="num" id="cdS">۰۰</div><div class="lbl">ثانیه</div></div>
+  </div>
+  <div id="cdmsg"></div>
+  <button id="spinBtn">🎲 شروع قرعه‌کشی</button>
+  <div id="tmr"></div>
+  <div id="res"></div>
+  <button id="sndTog" class="on">🔊 صدا روشن</button>
+  <div class="card">
+    <div class="whead"><h2>🏆 تالار برندگان</h2></div>
+    <div class="tabs">
+      <button class="tab w-tab on" data-k="day">امروز</button>
+      <button class="tab w-tab" data-k="week">این هفته</button>
+      <button class="tab w-tab" data-k="month">این ماه</button>
+    </div>
+    <div id="wlist"><div class="wempty">در حال بارگذاری…</div></div>
+  </div>
+  <div class="card">
+    <div class="whead"><h2>🏆 برترین دعوت‌کنندگان</h2><span id="lbUpdated" style="font-size:10px;color:var(--mut2)"></span></div>
+    <div class="tabs">
+      <button class="tab lb-tab" data-k="day">امروز</button>
+      <button class="tab lb-tab" data-k="week">هفته</button>
+      <button class="tab lb-tab" data-k="month">ماه</button>
+      <button class="tab lb-tab on" data-k="all">کل</button>
+    </div>
+    <div id="toplist"><div class="wempty">در حال بارگذاری…</div></div>
+  </div>
+  <div class="meta" id="metaLine"></div>
+</div>
+<div id="stateBox"></div>
+<div id="modal"><div class="mbox">
+  <div class="cr">🏆</div><h3>برنده قرعه‌کشی</h3>
+  <div class="bw" id="mName"></div>
+  <div class="bd" id="mDetail"></div>
+  <button id="mclose">باشه</button>
+</div></div>
+<canvas id="cfx"></canvas>
+
+<script>
+'use strict';
+/* ============================================================
+   گردونه قرعه‌کشی Free IRAN — نسخه Premium
+   - برنده از سمت سرور (ربات) داخل توکن امضاشده مشخص شده
+   - این صفحه فقط «نمایش سینمایی» برنده است؛ انتخاب اینجاست
+   ============================================================ */
+const $=s=>document.querySelector(s);
+const tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
+if(tg){try{tg.ready();tg.expand();}catch(e){}}
+
+/* ---------- ابزار ---------- */
+const b64d=s=>{try{return JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g,'+').replace(/_/g,'/')))))}catch(e){return null}};
+const faNum=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const faDate=ts=>{try{return new Date(ts*1000).toLocaleDateString('fa-IR')}catch(e){return ''}};
+const faTime=ts=>{try{return new Date(ts*1000).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}catch(e){return ''}};
+const haptic=(t='medium')=>{try{tg&&tg.HapticFeedback&&tg.HapticFeedback.notificationOccurred(t)}catch(e){}};
+
+/* ---------- صدا (WebAudio — سنتزشده، بدون فایل) ---------- */
+const Snd=(()=>{let ctx=null,on=true;
+  const ac=()=>ctx||(ctx=new (window.AudioContext||window.webkitAudioContext)());
+  function tick(vol=.5){if(!on)return;try{const a=ac(),o=a.createOscillator(),g=a.createGain();
+    o.type='square';o.frequency.value=1900+Math.random()*400;g.gain.setValueAtTime(.12*vol,a.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.05);o.connect(g).connect(a.destination);
+    o.start();o.stop(a.currentTime+.06);}catch(e){}}
+  function fanfare(){if(!on)return;try{const a=ac(),notes=[523,659,784,1047,784,1047];
+    notes.forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();o.type='triangle';o.frequency.value=f;
+      const t=a.currentTime+i*.13;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.25,t+.02);
+      g.gain.exponentialRampToValueAtTime(.001,t+.35);o.connect(g).connect(a.destination);o.start(t);o.stop(t+.4);});}catch(e){}}
+  return{tick,fanfare,toggle:()=>on=!on,get on(){return on}};
+})();
+
+/* ---------- تشخیص محیط و لاگ تشخیصی ---------- */
+const ENV={
+  isTelegram:!!(window.Telegram&&window.Telegram.WebApp),
+  isGitHubPages:location.hostname.includes('github.io'),
+  url:location.href.split('?')[0],
+  params:Object.fromEntries(new URLSearchParams(location.search).entries()),
+};
+function dlog(stage,ok,detail){
+  console.log(`[Wheel:${stage}] ${ok?'✅':'❌'} ${detail||''}`);
+  console.log(`[Wheel:${stage}] env=tg:${ENV.isTelegram} gh:${ENV.isGitHubPages} params=`,ENV.params);
+}
+dlog('init',true,'شروع');
+
+/* ---------- توکن ---------- */
+const qs=new URLSearchParams(location.search);
+const rawT=qs.get('t');
+const payload=rawT&&rawT.includes('.')?b64d(rawT.split('.')[0]):null;
+function showState(ic,h,p){$('#app').classList.remove('show');
+  $('#stateBox').innerHTML=`<div class="state"><div class="ic">${ic}</div><h2>${h}</h2><p>${p}</p></div>`;}
+if(!payload||payload.v!==1||!Array.isArray(payload.p)||!payload.p.length){
+  showState('🔗','لینک گردونه نامعتبر است','از ربات تلگرام وارد شوید.');throw new Error('bad token');}
+if(payload.exp*1000<Date.now()){
+  showState('⏰','این لینک منقضی شده است','از ادمین بخواهید لینک جدید بسازد.');throw new Error('expired');}
+
+let P=[],WIN=0,N=0,USED_KEY='';
+let SEG=0;function calcSEG(){SEG=N>0?Math.PI*2/N:0;}
+/* اعتبارسنجی سخت‌گیرانه: فقط توکن تولیدشده توسط ربات */
+if(!rawT){
+  dlog('token',false,'توکن در URL وجود ندارد');
+  showState('🔗','لینک گردونه نامعتبر است','این گردونه فقط از داخل ربات تلگرام قابل باز شدن است.');
+  throw new Error('missing token');
+}
+if(!payload||payload.v!==1||!Array.isArray(payload.p)||!payload.p.length){
+  dlog('token',false,'ساختار توکن نامعتبر است');
+  showState('🔗','لینک گردونه نامعتبر است','لینک خراب است. از ربات لینک جدید بگیرید.');
+  throw new Error('bad token');
+}
+if(payload.exp*1000<Date.now()){
+  dlog('token',false,'توکن منقضی شده است');
+  showState('⏰','این لینک منقضی شده است','از ادمین بخواهید لینک جدید بسازد.');
+  throw new Error('expired');
+}
+P=payload.p.map(x=>({name:String(x[0]||'؟').slice(0,28),uid:String(x[1]||'')})); 
+WIN=payload.w|0;N=P.length;USED_KEY='lotto_used_'+payload.n;
+dlog('token',true,`توکن معتبر: ${N} شرکت‌کننده`);
+calcSEG();
+
+/* ---------- بررسی یکبارمصرف ---------- */
+async function alreadyUsed(){
+  try{if(tg&&tg.CloudStorage){const v=await new Promise(r=>tg.CloudStorage.getItem(USED_KEY,(e,v)=>r(v)));if(v)return true;}}catch(e){}
+  try{if(localStorage.getItem(USED_KEY))return true;}catch(e){}
+  return false;
+}
+async function markUsed(){
+  try{if(tg&&tg.CloudStorage)tg.CloudStorage.setItem(USED_KEY,'1');}catch(e){}
+  try{localStorage.setItem(USED_KEY,'1');}catch(e){}
+}
+</script>
+<script>
+'use strict';
+/* ============================================================
+   بخش ۲ — رندر گردونه (Canvas 2D، سه‌بعدی‌نما، ۶۰fps)
+   ============================================================ */
+const cv=$('#cv'),ctx=cv.getContext('2d');
+let DPR=1,CW=0;
+function sizeCanvas(){const r=cv.getBoundingClientRect();DPR=Math.min(window.devicePixelRatio||1,3);
+  CW=r.width;cv.width=CW*DPR;cv.height=CW*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);drawWheel(curAngle);}
+
+let curAngle=0,spinning=false,lastTickSeg=-1;
+
+/* پالت طلایی/نئونی چرخشی */
+const PAL=[
+  ['#2b1e05','#4a3208'],['#0e1a2b','#16294a'],['#3a2b08','#5e4510'],['#0f2b26','#1a4a42'],
+  ['#2b0f1e','#4a1a34'],['#1e1e0f','#36361a'],['#0f1e33','#1e3a5e'],['#331a0f','#5e341e']
+];
+function segColors(i){const c=PAL[i%PAL.length];return c;}
+
+function drawWheel(angle){
+  const R=CW/2;ctx.clearRect(0,0,CW,CW);ctx.save();ctx.translate(R,R);
+  /* بدنه سگمنت‌ها */
+  for(let i=0;i<N;i++){
+    const a0=angle+i*SEG,a1=a0+SEG;
+    const [c0,c1]=segColors(i);
+    const g=ctx.createRadialGradient(0,0,R*.12,0,0,R);
+    g.addColorStop(0,c1);g.addColorStop(.75,c0);g.addColorStop(1,'#000');
+    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R-2,a0,a1);ctx.closePath();
+    ctx.fillStyle=g;ctx.fill();
+    /* جداکننده طلایی */
+    ctx.strokeStyle='rgba(255,215,0,.85)';ctx.lineWidth=Math.max(1.5,R*.008);
+    ctx.beginPath();ctx.moveTo(Math.cos(a0)*(R*.16),Math.sin(a0)*(R*.16));
+    ctx.lineTo(Math.cos(a0)*(R-2),Math.sin(a0)*(R-2));ctx.stroke();
+    /* پرچ طلایی روی لبه */
+    ctx.fillStyle='#ffd700';
+    ctx.beginPath();ctx.arc(Math.cos((a0+a1)/2)*(R-8),Math.sin((a0+a1)/2)*(R-8),Math.max(2,R*.014),0,7);ctx.fill();
+  }
+  /* برجستگی سه‌بعدی: سایه داخلی + هایلایت */
+  let sh=ctx.createRadialGradient(0,0,R*.55,0,0,R);
+  sh.addColorStop(0,'rgba(0,0,0,0)');sh.addColorStop(.85,'rgba(0,0,0,.12)');sh.addColorStop(1,'rgba(0,0,0,.55)');
+  ctx.beginPath();ctx.arc(0,0,R-2,0,7);ctx.fillStyle=sh;ctx.fill();
+  let hl=ctx.createLinearGradient(-R,-R,R,R);
+  hl.addColorStop(0,'rgba(255,255,255,.14)');hl.addColorStop(.35,'rgba(255,255,255,0)');hl.addColorStop(1,'rgba(0,0,0,.18)');
+  ctx.beginPath();ctx.arc(0,0,R-2,0,7);ctx.fillStyle=hl;ctx.fill();
+  /* نوشته‌ها — اندازه هوشمند */
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  const fs=Math.min(R*.11,Math.max(R*.045,(SEG*R*.9)/Math.max(...P.map(p=>p.name.length),4)*1.7));
+  ctx.font=`800 ${fs}px Vazirmatn,Tahoma`;
+  for(let i=0;i<N;i++){
+    const mid=angle+(i+.5)*SEG;
+    ctx.save();ctx.rotate(mid);ctx.translate(R*.62,0);ctx.rotate(Math.PI/2);
+    /* سایه متن برای خوانایی */
+    ctx.shadowColor='rgba(0,0,0,.8)';ctx.shadowBlur=6;
+    ctx.fillStyle=i===WIN&&!spinning&&done?'#ffe98a':'#f5f0dc';
+    /* بریده‌نشدن: کوتاه‌سازی هوشمند */
+    let nm=P[i].name;const maxW=SEG*R*.92;
+    while(ctx.measureText(nm).width>maxW&&nm.length>2)nm=nm.slice(0,-1);
+    if(nm!==P[i].name)nm=nm.slice(0,-1)+'…';
+    ctx.fillText(nm,0,0);ctx.restore();
+  }
+  /* حلقه نور برنده */
+  if(done&&!spinning){
+    const wa=angle+(WIN+.5)*SEG;
+    ctx.save();ctx.rotate(wa);
+    ctx.strokeStyle='#ffe98a';ctx.lineWidth=4;ctx.shadowColor='#ffd700';ctx.shadowBlur=22;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R-4, -SEG/2,SEG/2);ctx.closePath();ctx.stroke();ctx.restore();
+  }
+  ctx.restore();
+}
+let done=false;
+'use strict';
+/* ============================================================
+   بخش ۳ — فیزیک چرخش، صدا، کانفتی، مودال برنده
+   ============================================================ */
+const ptr=$('#ptr'),btn=$('#spinBtn'),res=$('#res'),tmr=$('#tmr');
+const easeOutQuint=t=>1-Math.pow(1-t,5);
+
+/* محاسبه زاویه نهایی: سگمنت برنده زیر عقربه (بالا = -۹۰ درجه) */
+function targetAngle(){
+  const pointer=-Math.PI/2;
+  const segCenter=(WIN+.5)*SEG;
+  /* می‌خواهیم: curAngle + rot + segCenter ≡ pointer (mod 2π) */
+  let need=pointer-segCenter-curAngle;
+  need=((need% (Math.PI*2))+Math.PI*2)%(Math.PI*2);
+  /* کمی تصادفی داخل سگمنت (نه لبه) برای طبیعی‌بودن */
+  const jitter=(Math.random()-.5)*SEG*.5;
+  const spins=(5+Math.floor(Math.random()*3))*Math.PI*2;
+  return curAngle+spins+need+jitter;
+}
+
+function spin(){
+  if(spinning||done)return;
+  spinning=true;btn.disabled=true;res.innerHTML='';tmr.textContent='';
+  /* انتشار شروع چرخش برای همگام‌سازی بینندگان */
+  try{
+    const spinId='spin_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+    tg&&tg.sendData(JSON.stringify({action:'spin_started',spin_id:spinId,
+      winner_idx:WIN,start_ts:Date.now(),token:rawT}));
+    dlog('sync',true,'رویداد شروع چرخش ارسال شد');
+  }catch(e){dlog('sync',false,'خطا در ارسال رویداد: '+e.message);}
+  haptic('medium');
+  const from=curAngle,to=targetAngle(),dur=8000+Math.random()*2000,t0=performance.now();
+  lastTickSeg=Math.floor(((from% (Math.PI*2))+Math.PI*2)%(Math.PI*2)/SEG);
+  function frame(now){
+    const t=Math.min(1,(now-t0)/dur),e=easeOutQuint(t);
+    curAngle=from+(to-from)*e;
+    /* تیک صدا + لرزش عقربه هنگام عبور از مرز سگمنت */
+    const seg=Math.floor((((curAngle% (Math.PI*2))+Math.PI*2)%(Math.PI*2))/SEG);
+    if(seg!==lastTickSeg){lastTickSeg=seg;Snd.tick(.4+.6*(1-t));
+      ptr.classList.remove('hit');void ptr.offsetWidth;ptr.classList.add('hit');}
+    /* شمارش معکوس */
+    const left=Math.ceil((dur-(now-t0))/1000);
+    if(left>0)tmr.textContent='⏳ '+faNum(left)+' ثانیه تا اعلام برنده';
+    drawWheel(curAngle);
+    if(t<1)requestAnimationFrame(frame);else finish();
+  }
+  requestAnimationFrame(frame);
+}
+
+/* چرخش همگام برای بینندگان — همان انیمیشن، همزمان */
+function playSyncedSpin(winnerIdx,elapsedMs){
+  if(spinning||done)return;
+  spinning=true;
+  const from=curAngle,to=targetAngleFor(winnerIdx),dur=8000,t0=performance.now()-elapsedMs;
+  lastTickSeg=Math.floor(((from%(Math.PI*2))+Math.PI*2)%(Math.PI*2)/SEG);
+  function frame(now){
+    const t=Math.min(1,(now-t0)/dur),e=easeOutQuint(t);
+    curAngle=from+(to-from)*e;
+    const seg=Math.floor((((curAngle%(Math.PI*2))+Math.PI*2)%(Math.PI*2))/SEG);
+    if(seg!==lastTickSeg){lastTickSeg=seg;Snd.tick(.4+.6*(1-t));
+      ptr.classList.remove('hit');void ptr.offsetWidth;ptr.classList.add('hit');}
+    drawWheel(curAngle);
+    if(t<1)requestAnimationFrame(frame);
+    else{spinning=false;done=true;curAngle=curAngle%(Math.PI*2);drawWheel(curAngle);
+      const w=P[winnerIdx];Snd.fanfare();launchConfetti();
+      res.innerHTML=`<div class="wl">✨ برنده قرعه‌کشی ✨</div><div class="wn">${esc(w.name)}</div>`;}
+  }
+  requestAnimationFrame(frame);
+}
+function targetAngleFor(idx){
+  const turns=6+Math.random()*2;
+  return curAngle+turns*Math.PI*2+((3*Math.PI/2-((idx+.5)*SEG))-curAngle%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+}
+function finish(){
+  spinning=false;done=true;tmr.textContent='';
+  curAngle=curAngle%(Math.PI*2);drawWheel(curAngle);
+  const w=P[WIN];
+  Snd.fanfare();haptic('success');
+  launchConfetti();
+  /* نمایش نتیجه */
+  res.innerHTML=`<div class="wl">✨ برنده قرعه‌کشی ✨</div><div class="wn">${esc(w.name)}</div>
+    <div class="ws">✅ نتیجه برای ربات ارسال شد</div>`;
+  /* مودال */
+  $('#mName').textContent=w.name;
+  const dt=new Date();
+  $('#mDetail').innerHTML=`جایزه: <b>${esc(payload.prize||'قرعه‌کشی هفتگی')}</b><br>آیدی: <b>${faNum(w.uid||'—')}</b><br>تاریخ: <b>${dt.toLocaleDateString('fa-IR')}</b> — ساعت <b>${dt.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}</b>`;
+  setTimeout(()=>$('#modal').classList.add('show'),650);
+  markUsed();
+  /* ارسال به ربات */
+  try{tg&&tg.sendData(JSON.stringify({action:'lottery_winner',lotto_id:payload.id,
+    winner_idx:WIN,uid:w.uid,name:w.name,token:rawT,ts:Math.floor(Date.now()/1000)}));}catch(e){}
+}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+$('#mclose').onclick=()=>$('#modal').classList.remove('show');
+btn.onclick=spin;
+
+/* ---------- کانفتی (Canvas، سبک و بهینه) ---------- */
+const cfx=$('#cfx'),cx=cfx.getContext('2d');let parts=[],cfRun=false;
+function sizeCfx(){cfx.width=innerWidth;cfx.height=innerHeight;}
+function launchConfetti(){
+  sizeCfx();parts=[];
+  const colors=['#ffd700','#ffefa0','#00e5ff','#ff5b6e','#3ddc84','#fff','#c9a227'];
+  for(let i=0;i<160;i++)parts.push({x:Math.random()*cfx.width,y:-20-Math.random()*cfx.height*.4,
+    w:5+Math.random()*7,h:8+Math.random()*8,c:colors[i%colors.length],
+    vy:2+Math.random()*3.5,vx:-1.5+Math.random()*3,r:Math.random()*Math.PI,vr:-.1+Math.random()*.2});
+  if(!cfRun){cfRun=true;cfFrame();}
+  setTimeout(()=>{parts=[];},7000);
+}
+function cfFrame(){
+  cx.clearRect(0,0,cfx.width,cfx.height);
+  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+    cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore();}
+  if(parts.length)requestAnimationFrame(cfFrame);else{cfRun=false;cx.clearRect(0,0,cfx.width,cfx.height);}
+}
+'use strict';
+/* ============================================================
+   بخش ۴ — تالار برندگان، مقداردهی اولیه
+   ============================================================ */
+let winnersCache=null,winnersTs=0;
+async function loadWinners(){
+  /* کش هوشمند ۵ دقیقه‌ای */
+  if(winnersCache&&Date.now()-winnersTs<3e5)return winnersCache;
+  try{const r=await fetch('winners.json?_='+Date.now(),{cache:'no-store'});
+    if(r.ok){winnersCache=await r.json();winnersTs=Date.now();return winnersCache;}}catch(e){}
+  return [];
+}
+function renderWinners(kind){
+  loadWinners().then(all=>{
+    const now=new Date();now.setHours(0,0,0,0);
+    const ws=new Date(now);ws.setDate(ws.getDate()-((ws.getDay()+6)%7)); /* دوشنبه شروع هفته */
+    const ms=new Date(now.getFullYear(),now.getMonth(),1);
+    let f=all.filter(w=>(w.ts||0)*1000>=now.getTime());
+    if(kind==='week')f=all.filter(w=>(w.ts||0)*1000>=ws.getTime());
+    if(kind==='month')f=all.filter(w=>(w.ts||0)*1000>=ms.getTime());
+    f=f.slice(-20).reverse();
+    const box=$('#wlist');
+    if(!f.length){box.innerHTML='<div class="wempty">هنوز برنده‌ای ثبت نشده 🏆</div>';return;}
+    box.innerHTML=f.map((w,i)=>{
+      const rk=i<3?`r${i+1}`:'';
+      return `<div class="wrow" style="animation-delay:${i*40}ms">
+        <div class="rk ${rk}">${faNum(i+1)}</div>
+        <div class="inf"><div class="nm">${esc(w.name||'؟')}</div>
+        <div class="mt">${faDate(w.ts||0)} • ${faTime(w.ts||0)}</div></div>
+        <div class="prz">${esc(w.prize||'')}</div></div>`;}).join('');
+  });
+}
+/* ---------- تشخیص ادمین ---------- */
+function isAdminViewer(){
+  try{
+    const uid=window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initDataUnsafe&&Telegram.WebApp.initDataUnsafe.user
+      ?String(Telegram.WebApp.initDataUnsafe.user.id):null;
+    return uid&&payload.admin&&uid===String(payload.admin);
+  }catch(e){return false;}
+}
+/* ---------- همگام‌سازی زنده ---------- */
+let lastSpinId=null,liveSyncTimer=null;
+async function startLiveSync(){
+  dlog('sync',true,'شروع همگام‌سازی زنده');
+  const poll=async()=>{
+    try{
+      const r=await fetch('live_spin.json?_='+Date.now(),{cache:'no-store'});
+      if(r.ok){
+        const d=await r.json();
+        if(d.spin_id&&d.spin_id!==lastSpinId&&!spinning&&!done){
+          lastSpinId=d.spin_id;
+          // شروع انیمیشن همگام
+          const elapsed=Date.now()-(d.start_ts||Date.now());
+          dlog('sync',true,`چرخش زنده دریافت شد (تاخیر ${elapsed}ms)`);
+          playSyncedSpin(d.winner_idx|0,Math.max(0,elapsed));
+        }
+      }
+    }catch(e){}
+    liveSyncTimer=setTimeout(poll,1500);
+  };
+  poll();
+}
+/* ---------- برترین دعوت‌کنندگان ---------- */
+let lbData=null;
+function renderLB(kind){
+  const box=$('#toplist');
+  if(!lbData){box.innerHTML='<div class="wempty">در حال بارگذاری…</div>';return;}
+  const top=(lbData[kind]||[]).slice(0,10);
+  if(!top.length){box.innerHTML='<div class="wempty">در این بازه دعوتی ثبت نشده 🚀</div>';return;}
+  const medals=['🥇','🥈','🥉'];
+  box.innerHTML=top.map((u,i)=>{
+    const rk=i<3?`r${i+1}`:'',medal=i<3?medals[i]:'';
+    return `<div class="wrow" style="animation-delay:${i*40}ms">
+      <div class="rk ${rk}">${i<3?medal:faNum(i+1)}</div>
+      <div class="inf"><div class="nm">${esc(u.name||'؟')}</div></div>
+      <div class="prz">📨 ${faNum(u.invites||0)} دعوت</div></div>`;}).join('');
+}
+let lbTimer=null;
+async function loadLeaderboard(silent){
+  try{
+    const r=await fetch('leaderboard.json?_='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw 0;
+    const fresh=await r.json();
+    // فقط اگر تغییر واقعی داشت به‌روز کن
+    const freshStr=JSON.stringify(fresh.all||[]);
+    const oldStr=lbData?JSON.stringify(lbData.all||[]):'';
+    lbData=fresh;
+    const curTab=document.querySelector('.lb-tab.on');
+    renderLB(curTab?curTab.dataset.k:'all');
+    // نمایش زمان به‌روزرسانی
+    try{
+      const dt=new Date((fresh.updated||Date.now()/1000)*1000);
+      $('#lbUpdated').textContent='🕐 '+dt.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+    }catch(e){}
+    if(!silent&&freshStr!==oldStr)console.log('Leaderboard refreshed');
+  }catch(e){
+    if(!silent)$('#toplist').innerHTML='<div class="wempty">⚠️ خطا در دریافت اطلاعات<br><span style="font-size:11px">اتصال اینترنت را بررسی کنید</span></div>';
+  }
+  // به‌روزرسانی خودکار هر ۵ دقیقه
+  if(lbTimer)clearTimeout(lbTimer);
+  lbTimer=setTimeout(()=>loadLeaderboard(true),3e5);
+}
+document.querySelectorAll('.w-tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.w-tab').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');renderWinners(t.dataset.k);});
+
+/* دکمه صدا */
+$('#sndTog').onclick=e=>{const on=Snd.toggle();e.target.textContent=on?'🔊 صدا روشن':'🔇 صدا خاموش';
+  e.target.classList.toggle('on',on);};
+
+/* متا */
+$('#prizeLbl').textContent='🏆 '+ (payload.prize||'برنده خوش‌شانس این دوره');
+$('#metaLine').textContent=`${faNum(N)} شرکت‌کننده • ${faDate(payload.ts||Date.now()/1000)}`;
+
+/* ---------- شمارش معکوس ---------- */
+function initCountdown(){
+  const startTs=(payload.start||0)*1000,now=Date.now();
+  if(startTs<=now)return true; /* شروع شده */
+  const cd=$('#countdown'),msg=$('#cdmsg');
+  cd.style.display='flex';btn.disabled=true;
+  btn.textContent='⏳ به‌زودی شروع می‌شود';
+  function tick(){
+    const diff=startTs-Date.now();
+    if(diff<=0){cd.style.display='none';msg.textContent='';
+      btn.disabled=false;btn.textContent='🎲 شروع قرعه‌کشی';haptic('medium');return true;}
+    const d=Math.floor(diff/864e5),h=Math.floor(diff/36e5)%24,m=Math.floor(diff/6e4)%60,s=Math.floor(diff/1e3)%60;
+    $('#cdD').textContent=faNum(d);$('#cdH').textContent=faNum(h);
+    $('#cdM').textContent=faNum(m);$('#cdS').textContent=faNum(s);
+    const dt=new Date(startTs);
+    msg.textContent=`🕐 شروع: ${dt.toLocaleDateString('fa-IR')} ساعت ${dt.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}`;
+    setTimeout(tick,1000);return false;
+  }
+  tick();return false;
+}
+/* مقداردهی */
+(async()=>{
+  if(await alreadyUsed()){
+    showState('✅','این قرعه‌کشی قبلاً انجام شده است','نتیجه قبلاً ثبت و برای ربات ارسال شده.');return;}
+  $('#app').classList.add('show');$('#stateBox').innerHTML='';
+  initCountdown();
+  sizeCanvas();drawWheel(0);renderWinners('day');
+  /* فقط ادمین حق چرخش دارد */
+  try{
+    const viewerId=window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initDataUnsafe&&Telegram.WebApp.initDataUnsafe.user
+      ?String(Telegram.WebApp.initDataUnsafe.user.id):null;
+    const adminId=payload.admin?String(payload.admin):null;
+    if(adminId&&viewerId&&viewerId!==adminId){
+      btn.disabled=true;btn.textContent='👁️ فقط مشاهده';
+      btn.style.opacity='.5';btn.style.cursor='not-allowed';
+      dlog('auth',true,'حالت فقط-مشاهده برای کاربر '+viewerId);
+    }else if(adminId&&!viewerId){
+      // خارج از تلگرام — اجازه مشاهده ولی نه چرخش نهایی
+      dlog('auth',false,'خارج از تلگرام');
+    }
+  }catch(e){dlog('auth',false,'خطا در تشخیص کاربر: '+e.message);}
+  document.querySelectorAll('.lb-tab').forEach(t=>t.onclick=()=>{
+    document.querySelectorAll('.lb-tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');renderLB(t.dataset.k);});
+  loadLeaderboard();
+  /* ---------- همگام‌سازی زنده چرخش ---------- */
+  if(!isAdminViewer())startLiveSync();
+  addEventListener('resize',()=>{sizeCanvas();sizeCfx();});
+  /* چرخش آرام معرفی (idle) */
+  let idle=true;btn.addEventListener('click',()=>idle=false,{once:true});
+  (function idleSpin(){if(!idle||spinning||done)return;
+    curAngle+=.0018;drawWheel(curAngle);requestAnimationFrame(idleSpin);})();
+})();
+</script>
+</body>
+</html>
