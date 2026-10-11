@@ -2,295 +2,457 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e17">
 <title>🎡 قرعه‌کشی Free IRAN</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
+:root{
+  --gold:#ffd700; --gold-d:#c9a227; --gold-l:#ffefa0;
+  --bg0:#05070d; --bg1:#0a0e17; --bg2:#101827;
+  --glass:rgba(255,255,255,.06); --glass-b:rgba(255,215,0,.18);
+  --txt:#f2f5fa; --mut:#8a9bb5; --mut2:#5a6a85;
+  --neon:#00e5ff; --danger:#ff5b6e; --ok:#3ddc84;
+}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{font-family:Tahoma,'Segoe UI',sans-serif;background:linear-gradient(180deg,#060a14 0%,#0d1526 45%,#060a14 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-x:hidden}
-.top-tag{font-size:12px;color:#8a9bb5;letter-spacing:4px;margin-bottom:8px}
-h1{font-size:24px;color:#ffd700;margin-bottom:4px;text-shadow:0 2px 10px rgba(255,215,0,.35)}
-.sub{font-size:12px;color:#5a6a85;margin-bottom:18px}
-.stage{position:relative;width:min(88vw,340px);height:min(88vw,340px)}
-.ptr{position:absolute;top:-16px;left:50%;transform:translateX(-50%);z-index:20;pointer-events:none}
-.ptr .tri{width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:32px solid #ffd700;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
-.ptr .dot{width:13px;height:13px;background:radial-gradient(circle,#fff8e1,#ffd700);border-radius:50%;margin:3px auto 0;box-shadow:0 0 14px #ffd700}
-.ptr.bounce{animation:pbounce .6s ease}
-@keyframes pbounce{0%,100%{transform:translateX(-50%) translateY(0)}30%{transform:translateX(-50%) translateY(-10px)}60%{transform:translateX(-50%) translateY(3px)}}
-#cv{width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 6px #1a2333,0 0 0 10px #c9a227,0 14px 44px rgba(0,0,0,.65),0 0 70px rgba(255,215,0,.12)}
-.hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fffdf5 0%,#f5d76e 35%,#c9a227 70%,#8b6914 100%);display:flex;align-items:center;justify-content:center;z-index:10;border:2px solid #8b6914;box-shadow:0 6px 18px rgba(0,0,0,.5),inset 0 2px 5px rgba(255,255,255,.6);font-size:11px;font-weight:bold;color:#5a4a0a;line-height:1.35;text-align:center;pointer-events:none}
-#btn{margin-top:26px;padding:15px 60px;font-size:19px;font-weight:bold;font-family:inherit;letter-spacing:.5px;color:#1a1a1a;background:linear-gradient(180deg,#ffefa0 0%,#ffd700 45%,#c9a227 100%);border:none;border-radius:60px;cursor:pointer;box-shadow:0 8px 24px rgba(255,215,0,.3),inset 0 2px 3px rgba(255,255,255,.65);transition:transform .12s,opacity .2s;touch-action:manipulation;min-height:56px}
-#btn:active:not(:disabled){transform:scale(.95)}
-#btn:disabled{background:#2c3547;color:#6b7a94;cursor:not-allowed;box-shadow:none;transform:none}
-#res{margin-top:18px;min-height:64px;text-align:center}
-#res .wname{font-size:28px;font-weight:bold;color:#ffd700;text-shadow:0 0 18px rgba(255,215,0,.55);animation:pop .55s cubic-bezier(.2,1.4,.4,1)}
-#res .wlbl{font-size:13px;color:#8a9bb5;margin-bottom:6px;letter-spacing:2px}
-#res .wsent{font-size:13px;color:#4CAF50;margin-top:8px}
-#tmr{font-size:14px;color:#ffd700;font-weight:bold;min-height:22px;margin-top:4px;letter-spacing:1px;font-variant-numeric:tabular-nums}
-#sndTog{margin-top:10px;font-size:12px;color:#5a6a85;background:none;border:1px solid #2c3547;border-radius:20px;padding:6px 16px;cursor:pointer;font-family:inherit}
-#sndTog.on{color:#ffd700;border-color:#c9a227}
-.err{font-size:16px;color:#ff6b6b;padding:40px 20px;text-align:center;line-height:2}
-.cfetti{position:fixed;top:-12px;z-index:999;pointer-events:none;border-radius:2px}
-@keyframes pop{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
-@keyframes cfall{to{transform:translateY(112vh) rotate(760deg)}}
+body{
+  font-family:'Vazirmatn',Tahoma,sans-serif;color:var(--txt);
+  background:
+    radial-gradient(1200px 600px at 50% -10%,rgba(255,215,0,.07),transparent 60%),
+    radial-gradient(900px 500px at 85% 110%,rgba(0,229,255,.05),transparent 60%),
+    linear-gradient(180deg,var(--bg0),var(--bg1) 45%,var(--bg0));
+  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;
+  padding:calc(14px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+  overflow-x:hidden;user-select:none;-webkit-user-select:none;
+}
+/* ---------- هدر ---------- */
+.brand{display:flex;flex-direction:column;align-items:center;margin-bottom:10px;animation:fadeDown .7s ease both}
+.brand .ring{font-size:11px;letter-spacing:6px;color:var(--mut);font-weight:500}
+.brand h1{font-size:clamp(22px,6vw,30px);font-weight:900;color:var(--gold);
+  text-shadow:0 2px 14px rgba(255,215,0,.35),0 0 44px rgba(255,215,0,.12);margin-top:2px}
+.brand .sub{font-size:12px;color:var(--mut2);margin-top:2px}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+/* ---------- استیج گردونه ---------- */
+.stage{position:relative;width:min(92vw,380px);height:min(92vw,380px);margin-top:6px}
+/* هاله نور پشت گردونه */
+.stage::before{content:'';position:absolute;inset:-8%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,215,0,.14),rgba(255,215,0,.03) 55%,transparent 70%);
+  filter:blur(6px);pointer-events:none;animation:halo 4s ease-in-out infinite}
+@keyframes halo{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}
+/* عقربه */
+.ptr{position:absolute;top:-14px;left:50%;transform:translateX(-50%);z-index:30;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.ptr .tri{width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;
+  border-top:30px solid var(--gold);position:relative}
+.ptr .tri::after{content:'';position:absolute;left:-15px;top:-30px;border-left:15px solid transparent;
+  border-right:15px solid transparent;border-top:30px solid rgba(255,255,255,.35);
+  clip-path:polygon(0 0,38% 0,30% 100%,0 100%)}
+.ptr .pin{width:14px;height:14px;margin:4px auto 0;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--gold) 60%,#8b6914);
+  box-shadow:0 0 16px rgba(255,215,0,.8)}
+.ptr.hit{animation:phit .18s ease}
+@keyframes phit{0%{transform:translateX(-50%) rotate(0)}40%{transform:translateX(-50%) rotate(-9deg)}100%{transform:translateX(-50%) rotate(0)}}
+#cv{width:100%;height:100%;border-radius:50%;display:block;position:relative;z-index:5;
+  box-shadow:0 0 0 7px #141c2c,0 0 0 9px #2a2113,0 0 0 13px var(--gold-d),
+    0 18px 50px rgba(0,0,0,.7),0 0 90px rgba(255,215,0,.14)}
+/* هاب مرکزی */
+.hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;pointer-events:none;
+  width:26%;height:26%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 34% 28%,#fffdf4 0%,#f7dd7e 30%,#d4af37 58%,#8b6914 82%,#5e470c 100%);
+  border:2px solid rgba(90,70,10,.9);
+  box-shadow:0 8px 22px rgba(0,0,0,.55),inset 0 3px 8px rgba(255,255,255,.75),inset 0 -6px 12px rgba(90,70,10,.5)}
+.hub .t1{font-size:clamp(9px,2.6vw,12px);font-weight:900;color:#4a3805;letter-spacing:1px;line-height:1.25;text-align:center;
+  text-shadow:0 1px 0 rgba(255,255,255,.55)}
+.hub .t2{font-size:clamp(7px,2vw,9px);font-weight:700;color:#6b5310;letter-spacing:3px;margin-top:1px}
+.hub .lion{font-size:clamp(13px,4vw,17px);margin-bottom:1px}
+/* ---------- دکمه ---------- */
+#spinBtn{margin-top:26px;position:relative;padding:16px 64px;font-size:19px;font-weight:800;font-family:inherit;
+  color:#231a02;background:linear-gradient(180deg,var(--gold-l),var(--gold) 45%,var(--gold-d));
+  border:none;border-radius:60px;cursor:pointer;letter-spacing:.5px;
+  box-shadow:0 10px 30px rgba(255,215,0,.32),inset 0 2px 4px rgba(255,255,255,.7),inset 0 -3px 6px rgba(120,85,0,.35);
+  transition:transform .12s,box-shadow .2s,opacity .2s;touch-action:manipulation;min-height:58px;overflow:hidden}
+#spinBtn::after{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 3.2s ease infinite}
+@keyframes shine{0%{left:-80%}55%,100%{left:130%}}
+#spinBtn:active:not(:disabled){transform:scale(.94)}
+#spinBtn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+#spinBtn:disabled::after{display:none}
+/* ---------- نتیجه ---------- */
+#res{margin-top:16px;min-height:70px;text-align:center;width:100%;max-width:420px}
+#res .wl{font-size:12px;color:var(--mut);letter-spacing:3px;margin-bottom:6px}
+#res .wn{font-size:clamp(26px,7vw,34px);font-weight:900;color:var(--gold);
+  text-shadow:0 0 24px rgba(255,215,0,.6);animation:pop .6s cubic-bezier(.2,1.5,.35,1) both}
+#res .ws{font-size:13px;color:var(--ok);margin-top:8px}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+#tmr{font-size:13px;color:var(--gold);font-weight:700;min-height:20px;margin-top:6px;letter-spacing:1px;font-variant-numeric:tabular-nums}
+/* ---------- کارت شیشه‌ای ---------- */
+.card{background:var(--glass);border:1px solid var(--glass-b);border-radius:20px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 12px 34px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.09);
+  padding:16px;width:100%;max-width:440px;margin-top:18px}
+/* ---------- برندگان ---------- */
+.whead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.whead h2{font-size:16px;font-weight:800;color:var(--gold)}
+.tabs{display:flex;gap:6px;background:rgba(0,0,0,.3);border-radius:14px;padding:4px;margin-bottom:12px}
+.tab{flex:1;border:none;background:none;color:var(--mut);font-family:inherit;font-size:12.5px;font-weight:700;
+  padding:9px 4px;border-radius:10px;cursor:pointer;transition:all .2s}
+.tab.on{background:linear-gradient(180deg,rgba(255,215,0,.22),rgba(255,215,0,.1));color:var(--gold);
+  box-shadow:inset 0 0 0 1px rgba(255,215,0,.3)}
+#wlist{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;padding:2px}
+.wrow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:9px 12px;animation:fadeDown .4s ease both}
+.wrow .rk{width:30px;height:30px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:14px;background:linear-gradient(180deg,#3a2f10,#1c1607);color:var(--gold);
+  border:1px solid rgba(255,215,0,.35)}
+.wrow .rk.r1{background:linear-gradient(180deg,#ffefa0,#c9a227);color:#231a02;box-shadow:0 0 14px rgba(255,215,0,.5)}
+.wrow .rk.r2{background:linear-gradient(180deg,#e8edf5,#9aa7bd);color:#1c2330}
+.wrow .rk.r3{background:linear-gradient(180deg,#f0b08a,#a06a3c);color:#2a1708}
+.wrow .inf{flex:1;min-width:0}
+.wrow .nm{font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrow .mt{font-size:11px;color:var(--mut2);margin-top:1px}
+.wrow .prz{font-size:11px;color:var(--neon);font-weight:700;white-space:nowrap}
+.wempty{text-align:center;color:var(--mut2);font-size:13px;padding:18px}
+/* ---------- مودال برنده ---------- */
+#modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:22px;
+  background:rgba(3,5,10,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#modal.show{display:flex}
+.mbox{width:100%;max-width:360px;text-align:center;background:linear-gradient(180deg,rgba(30,26,10,.92),rgba(12,10,4,.95));
+  border:1px solid rgba(255,215,0,.4);border-radius:26px;padding:30px 22px;position:relative;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 60px rgba(255,215,0,.18),inset 0 1px 0 rgba(255,255,255,.15);
+  animation:mIn .55s cubic-bezier(.2,1.4,.35,1) both}
+@keyframes mIn{from{transform:scale(.7) translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.mbox::before{content:'';position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent,rgba(255,215,0,.12),transparent 30%);
+  animation:spinRay 5s linear infinite;pointer-events:none}
+@keyframes spinRay{to{transform:rotate(360deg)}}
+.mbox .cr{font-size:52px;animation:bounce 1s ease infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.mbox h3{font-size:13px;color:var(--mut);letter-spacing:3px;margin:8px 0 4px}
+.mbox .bw{font-size:clamp(28px,8vw,36px);font-weight:900;color:var(--gold);
+  text-shadow:0 0 30px rgba(255,215,0,.7);margin:4px 0;position:relative}
+.mbox .bd{font-size:12.5px;color:var(--mut);line-height:2;position:relative}
+.mbox .bd b{color:var(--txt)}
+#mclose{margin-top:18px;padding:12px 44px;font-family:inherit;font-size:15px;font-weight:800;color:#231a02;
+  background:linear-gradient(180deg,var(--gold-l),var(--gold-d));border:none;border-radius:40px;cursor:pointer;position:relative}
+/* ---------- خطا / وضعیت ---------- */
+.state{padding:46px 24px;text-align:center;line-height:2.1;max-width:420px}
+.state .ic{font-size:56px;margin-bottom:10px}
+.state h2{font-size:20px;font-weight:800;color:var(--gold);margin-bottom:6px}
+.state p{font-size:14px;color:var(--mut)}
+/* کانفتی */
+#cfx{position:fixed;inset:0;z-index:99;pointer-events:none}
+/* دکمه صدا */
+#sndTog{margin-top:12px;font-size:12px;color:var(--mut2);background:none;border:1px solid #26314a;
+  border-radius:20px;padding:7px 18px;cursor:pointer;font-family:inherit;transition:all .2s}
+#sndTog.on{color:var(--gold);border-color:var(--gold-d)}
+.meta{margin-top:14px;font-size:11px;color:var(--mut2);letter-spacing:1px;text-align:center}
+@media (max-height:700px){.stage{width:min(80vw,300px);height:min(80vw,300px)}#spinBtn{margin-top:16px;padding:13px 52px}}
 </style>
 </head>
 <body>
-<div id="app">
-<div class="top-tag">FREE IRAN LOTTERY</div>
-<h1>🎡 قرعه‌کشی هفتگی</h1>
-<div class="sub">برنده خوش‌شانس این دوره</div>
-<div class="stage">
-<div class="ptr" id="ptr"><div class="tri"></div><div class="dot"></div></div>
-<canvas id="cv"></canvas>
-<div class="hub">FREE<br>IRAN</div>
+<div id="app" style="display:none">
+  <div class="brand">
+    <div class="ring">FREE IRAN LOTTERY</div>
+    <h1>🎡 قرعه‌کشی هفتگی</h1>
+    <div class="sub" id="prizeLbl">برنده خوش‌شانس این دوره</div>
+  </div>
+  <div class="stage">
+    <div class="ptr" id="ptr"><div class="tri"></div><div class="pin"></div></div>
+    <canvas id="cv"></canvas>
+    <div class="hub"><div class="lion">🦁</div><div class="t1">FREE<br>IRAN</div><div class="t2">LOTTERY</div></div>
+  </div>
+  <button id="spinBtn">🎲 شروع قرعه‌کشی</button>
+  <div id="tmr"></div>
+  <div id="res"></div>
+  <button id="sndTog" class="on">🔊 صدا روشن</button>
+  <div class="card">
+    <div class="whead"><h2>🏆 تالار برندگان</h2></div>
+    <div class="tabs">
+      <button class="tab on" data-k="day">امروز</button>
+      <button class="tab" data-k="week">این هفته</button>
+      <button class="tab" data-k="month">این ماه</button>
+    </div>
+    <div id="wlist"><div class="wempty">در حال بارگذاری…</div></div>
+  </div>
+  <div class="meta" id="metaLine"></div>
 </div>
-<button id="btn">🎲 شروع قرعه‌کشی</button>
-<div id="res"></div>
-<div id="tmr"></div>
-<button id="sndTog" class="on">🔊 صدا روشن</button>
-</div>
+<div id="stateBox"></div>
+<div id="modal"><div class="mbox">
+  <div class="cr">🏆</div><h3>برنده قرعه‌کشی</h3>
+  <div class="bw" id="mName"></div>
+  <div class="bd" id="mDetail"></div>
+  <button id="mclose">باشه</button>
+</div></div>
+<canvas id="cfx"></canvas>
+
 <script>
-(function(){
 'use strict';
-/* ============ CONFIG ============ */
-var SPIN_MS = 25000;          // EXACTLY 25 seconds
-var EXTRA_ROUNDS = 5;         // drama rotations
-var DPR_CAP = 2;              // devicePixelRatio cap for perf
+/* ============================================================
+   گردونه قرعه‌کشی Free IRAN — نسخه Premium
+   - برنده از سمت سرور (ربات) داخل توکن امضاشده مشخص شده
+   - این صفحه فقط «نمایش سینمایی» برنده است؛ انتخاب اینجاست
+   ============================================================ */
+const $=s=>document.querySelector(s);
+const tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
+if(tg){try{tg.ready();tg.expand();}catch(e){}}
 
-/* ============ TELEGRAM ============ */
-var tg = (window.Telegram && window.Telegram.WebApp) || null;
-if (tg) { try { tg.ready(); tg.expand(); } catch(e){} }
+/* ---------- ابزار ---------- */
+const b64d=s=>{try{return JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g,'+').replace(/_/g,'/')))))}catch(e){return null}};
+const faNum=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const faDate=ts=>{try{return new Date(ts*1000).toLocaleDateString('fa-IR')}catch(e){return ''}};
+const faTime=ts=>{try{return new Date(ts*1000).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}catch(e){return ''}};
+const haptic=(t='medium')=>{try{tg&&tg.HapticFeedback&&tg.HapticFeedback.notificationOccurred(t)}catch(e){}};
 
-/* ============ URL PARAMS ============ */
-var qs = new URLSearchParams(window.location.search);
-function hs(s){var h=0;for(var i=0;i<s.length;i++){h=((h<<5)-h+s.charCodeAt(i))|0;}return Math.abs(h).toString(36);}
-var pRaw = qs.get('p') || '';
-var lockKey = 'frw5_' + hs(pRaw);
-if (qs.get('reset') === '1') { try { localStorage.removeItem(lockKey); } catch(e){} }
+/* ---------- صدا (WebAudio — سنتزشده، بدون فایل) ---------- */
+const Snd=(()=>{let ctx=null,on=true;
+  const ac=()=>ctx||(ctx=new (window.AudioContext||window.webkitAudioContext)());
+  function tick(vol=.5){if(!on)return;try{const a=ac(),o=a.createOscillator(),g=a.createGain();
+    o.type='square';o.frequency.value=1900+Math.random()*400;g.gain.setValueAtTime(.12*vol,a.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.05);o.connect(g).connect(a.destination);
+    o.start();o.stop(a.currentTime+.06);}catch(e){}}
+  function fanfare(){if(!on)return;try{const a=ac(),notes=[523,659,784,1047,784,1047];
+    notes.forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();o.type='triangle';o.frequency.value=f;
+      const t=a.currentTime+i*.13;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.25,t+.02);
+      g.gain.exponentialRampToValueAtTime(.001,t+.35);o.connect(g).connect(a.destination);o.start(t);o.stop(t+.4);});}catch(e){}}
+  return{tick,fanfare,toggle:()=>on=!on,get on(){return on}};
+})();
 
-/* ============ PARTICIPANTS ============ */
-var parts = [];
-try {
-  var pd = JSON.parse(decodeURIComponent(pRaw));
-  if (Object.prototype.toString.call(pd) === '[object Array]') {
-    for (var pi=0; pi<pd.length; pi++) {
-      var x = pd[pi]; if (!x) continue;
-      if (typeof x === 'string') { if (x) parts.push({name:x, uid:''}); }
-      else if (x.name) { parts.push({name:String(x.name), uid:x.uid?String(x.uid):''}); }
-    }
-  }
-} catch(e){}
-var appEl = document.getElementById('app');
-if (!parts.length) { appEl.innerHTML = '<div class="err">⚠️<br>لینک گردونه نامعتبر است</div>'; return; }
+/* ---------- توکن ---------- */
+const qs=new URLSearchParams(location.search);
+const rawT=qs.get('t');
+const payload=rawT&&rawT.includes('.')?b64d(rawT.split('.')[0]):null;
+function showState(ic,h,p){$('#app').style.display='none';
+  $('#stateBox').innerHTML=`<div class="state"><div class="ic">${ic}</div><h2>${h}</h2><p>${p}</p></div>`;}
+if(!payload||payload.v!==1||!Array.isArray(payload.p)||!payload.p.length){
+  showState('🔗','لینک گردونه نامعتبر است','از ربات تلگرام وارد شوید.');throw new Error('bad token');}
+if(payload.exp*1000<Date.now()){
+  showState('⏰','این لینک منقضی شده است','از ادمین بخواهید لینک جدید بسازد.');throw new Error('expired');}
 
-/* ============ DOM ============ */
-var cv = document.getElementById('cv'),
-    ctx = cv.getContext('2d'),
-    btn = document.getElementById('btn'),
-    resEl = document.getElementById('res'),
-    tmrEl = document.getElementById('tmr'),
-    ptrEl = document.getElementById('ptr'),
-    sndBtn = document.getElementById('sndTog');
+const P=payload.p.map(x=>({name:String(x[0]||'؟').slice(0,28),uid:String(x[1]||'')})); 
+const WIN=payload.w|0, N=P.length;
+const USED_KEY='lotto_used_'+payload.n;
 
-/* ============ CANVAS DPR SETUP ============ */
-var cssSize = 0;
-function setupCanvas(){
-  var r = cv.getBoundingClientRect();
-  cssSize = Math.min(r.width || 340, 340);
-  var dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-  cv.width = Math.round(cssSize * dpr);
-  cv.height = Math.round(cssSize * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+/* ---------- بررسی یکبارمصرف ---------- */
+async function alreadyUsed(){
+  try{if(tg&&tg.CloudStorage){const v=await new Promise(r=>tg.CloudStorage.getItem(USED_KEY,(e,v)=>r(v)));if(v)return true;}}catch(e){}
+  try{if(localStorage.getItem(USED_KEY))return true;}catch(e){}
+  return false;
 }
-setupCanvas();
-window.addEventListener('resize', function(){ setupCanvas(); draw(angle); });
+async function markUsed(){
+  try{if(tg&&tg.CloudStorage)tg.CloudStorage.setItem(USED_KEY,'1');}catch(e){}
+  try{localStorage.setItem(USED_KEY,'1');}catch(e){}
+}
+</script>
+<script>
+'use strict';
+/* ============================================================
+   بخش ۲ — رندر گردونه (Canvas 2D، سه‌بعدی‌نما، ۶۰fps)
+   ============================================================ */
+const cv=$('#cv'),ctx=cv.getContext('2d');
+let DPR=1,CW=0;
+function sizeCanvas(){const r=cv.getBoundingClientRect();DPR=Math.min(window.devicePixelRatio||1,3);
+  CW=r.width;cv.width=CW*DPR;cv.height=CW*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);drawWheel(curAngle);}
+const SEG=Math.PI*2/N;
+let curAngle=0,spinning=false,lastTickSeg=-1;
 
-/* ============ WHEEL GEOMETRY ============ */
-var N = parts.length,
-    arc = Math.PI * 2 / N,
-    angle = 0;                       // current rotation (radians)
-var cols = ['#a93226','#9a6b0f','#145a32','#154360','#6c3483','#0e6655',
-            '#7b2d26','#1a5276','#7d6608','#4a235a','#943126','#1e8449'];
+/* پالت طلایی/نئونی چرخشی */
+const PAL=[
+  ['#2b1e05','#4a3208'],['#0e1a2b','#16294a'],['#3a2b08','#5e4510'],['#0f2b26','#1a4a42'],
+  ['#2b0f1e','#4a1a34'],['#1e1e0f','#36361a'],['#0f1e33','#1e3a5e'],['#331a0f','#5e341e']
+];
+function segColors(i){const c=PAL[i%PAL.length];return c;}
 
-function draw(a){
-  var S = cssSize || 340, C = S/2, R = S/2 - 4;
-  ctx.clearRect(0,0,S,S);
-  for (var i=0;i<N;i++){
-    var a0=a+i*arc, a1=a0+arc;
-    ctx.beginPath(); ctx.moveTo(C,C); ctx.arc(C,C,R,a0,a1); ctx.closePath();
-    ctx.fillStyle=cols[i%cols.length]; ctx.fill();
-    ctx.strokeStyle='rgba(255,215,0,.55)'; ctx.lineWidth=Math.max(2,S/170); ctx.stroke();
-    // rivet
+function drawWheel(angle){
+  const R=CW/2;ctx.clearRect(0,0,CW,CW);ctx.save();ctx.translate(R,R);
+  /* بدنه سگمنت‌ها */
+  for(let i=0;i<N;i++){
+    const a0=angle+i*SEG,a1=a0+SEG;
+    const [c0,c1]=segColors(i);
+    const g=ctx.createRadialGradient(0,0,R*.12,0,0,R);
+    g.addColorStop(0,c1);g.addColorStop(.75,c0);g.addColorStop(1,'#000');
+    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R-2,a0,a1);ctx.closePath();
+    ctx.fillStyle=g;ctx.fill();
+    /* جداکننده طلایی */
+    ctx.strokeStyle='rgba(255,215,0,.85)';ctx.lineWidth=Math.max(1.5,R*.008);
+    ctx.beginPath();ctx.moveTo(Math.cos(a0)*(R*.16),Math.sin(a0)*(R*.16));
+    ctx.lineTo(Math.cos(a0)*(R-2),Math.sin(a0)*(R-2));ctx.stroke();
+    /* پرچ طلایی روی لبه */
     ctx.fillStyle='#ffd700';
-    ctx.beginPath(); ctx.arc(C+(R-6)*Math.cos(a0), C+(R-6)*Math.sin(a0), Math.max(3,S/110), 0, 7); ctx.fill();
-    // label
-    ctx.save(); ctx.translate(C,C); ctx.rotate(a0+arc/2);
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle='#fff';
-    var fs = N>10 ? S/22 : N>6 ? S/17 : S/14;
-    ctx.font='bold '+fs+'px Tahoma,"Segoe UI",sans-serif';
-    ctx.shadowColor='rgba(0,0,0,.8)'; ctx.shadowBlur=6; ctx.shadowOffsetY=2;
-    var nm=parts[i].name, maxCh = N>10?10:14;
-    if (nm.length>maxCh) nm=nm.slice(0,maxCh)+'…';
-    ctx.fillText(nm, R*0.62, 0);
-    ctx.restore();
+    ctx.beginPath();ctx.arc(Math.cos((a0+a1)/2)*(R-8),Math.sin((a0+a1)/2)*(R-8),Math.max(2,R*.014),0,7);ctx.fill();
   }
-}
-
-/* ============ WAIT FOR FONTS THEN DRAW ============ */
-var fontsReady = false;
-function initDraw(){ draw(angle); }
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(function(){ fontsReady=true; initDraw(); });
-  setTimeout(function(){ if(!fontsReady){ fontsReady=true; initDraw(); } }, 1500);
-} else { initDraw(); }
-
-/* ============ SINGLE-USE LOCK ============ */
-var locked = false;
-try { locked = localStorage.getItem(lockKey) === '1'; } catch(e){}
-if (locked) {
-  btn.disabled = true; btn.textContent = '🔒 پایان یافته';
-  resEl.innerHTML = '<div class="wlbl" style="color:#ff6b6b">🔒 این گردونه قبلاً استفاده شده</div>';
-}
-
-/* ============ SOUND (Web Audio, tick slows with deceleration) ============ */
-var audioCtx = null, soundOn = true;
-function ensureAudio(){
-  if (!audioCtx) { try { audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e){} }
-  if (audioCtx && audioCtx.state==='suspended') { audioCtx.resume(); }
-}
-function tick(intensity){
-  if (!soundOn || !audioCtx) return;
-  try {
-    var o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.type='square'; o.frequency.value=1200+intensity*800;
-    g.gain.setValueAtTime(0.06+intensity*0.05, audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.05);
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(); o.stop(audioCtx.currentTime+0.06);
-  } catch(e){}
-}
-sndBtn.addEventListener('click', function(){
-  soundOn=!soundOn;
-  sndBtn.textContent = soundOn ? '🔊 صدا روشن' : '🔇 صدا خاموش';
-  sndBtn.classList.toggle('on', soundOn);
-  if (soundOn) ensureAudio();
-});
-
-/* ============ EASING ============ */
-function easeOutCubic(x){ x=Math.min(1,Math.max(0,x)); return 1-Math.pow(1-x,3); }
-
-/* ============ SPIN STATE ============ */
-var spinning=false, spinT0=0, spinStartAngle=0, spinTotal=0, spinWinner=-1,
-    spinEndFired=false, rafId=0, lastTickSeg=-1;
-
-function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-
-/* ---- frame(ts): ts is the rAF timestamp arg (NOT Date.now) ---- */
-function frame(ts){
-  if (!spinning) return;
-  var t = ts - spinT0;                    // elapsed ms
-  var p = Math.min(t / SPIN_MS, 1);       // progress [0,1]
-  angle = spinStartAngle + spinTotal * easeOutCubic(p);
-  draw(angle);
-  // timer
-  var rem = Math.max(0, Math.ceil((SPIN_MS - t)/1000));
-  tmrEl.textContent = p<1 ? ('⏱ '+rem+' ثانیه') : '';
-  // tick sound: faster early, slower late
-  var seg = Math.floor((((angle%(Math.PI*2))+Math.PI*2)%(Math.PI*2))/arc);
-  if (seg!==lastTickSeg){ lastTickSeg=seg; tick(1-p); }
-  if (p < 1) {
-    rafId = requestAnimationFrame(frame);
-  } else {
-    finishSpin();
+  /* برجستگی سه‌بعدی: سایه داخلی + هایلایت */
+  let sh=ctx.createRadialGradient(0,0,R*.55,0,0,R);
+  sh.addColorStop(0,'rgba(0,0,0,0)');sh.addColorStop(.85,'rgba(0,0,0,.12)');sh.addColorStop(1,'rgba(0,0,0,.55)');
+  ctx.beginPath();ctx.arc(0,0,R-2,0,7);ctx.fillStyle=sh;ctx.fill();
+  let hl=ctx.createLinearGradient(-R,-R,R,R);
+  hl.addColorStop(0,'rgba(255,255,255,.14)');hl.addColorStop(.35,'rgba(255,255,255,0)');hl.addColorStop(1,'rgba(0,0,0,.18)');
+  ctx.beginPath();ctx.arc(0,0,R-2,0,7);ctx.fillStyle=hl;ctx.fill();
+  /* نوشته‌ها — اندازه هوشمند */
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  const fs=Math.min(R*.11,Math.max(R*.045,(SEG*R*.9)/Math.max(...P.map(p=>p.name.length),4)*1.7));
+  ctx.font=`800 ${fs}px Vazirmatn,Tahoma`;
+  for(let i=0;i<N;i++){
+    const mid=angle+(i+.5)*SEG;
+    ctx.save();ctx.rotate(mid);ctx.translate(R*.62,0);ctx.rotate(Math.PI/2);
+    /* سایه متن برای خوانایی */
+    ctx.shadowColor='rgba(0,0,0,.8)';ctx.shadowBlur=6;
+    ctx.fillStyle=i===WIN&&!spinning&&done?'#ffe98a':'#f5f0dc';
+    /* بریده‌نشدن: کوتاه‌سازی هوشمند */
+    let nm=P[i].name;const maxW=SEG*R*.92;
+    while(ctx.measureText(nm).width>maxW&&nm.length>2)nm=nm.slice(0,-1);
+    if(nm!==P[i].name)nm=nm.slice(0,-1)+'…';
+    ctx.fillText(nm,0,0);ctx.restore();
   }
-}
-
-function finishSpin(){
-  if (spinEndFired) return;               // fire ONCE
-  spinEndFired = true;
-  spinning = false;
-  // SNAP to exact final value
-  angle = spinStartAngle + spinTotal;
-  draw(angle);
-  tmrEl.textContent = '';
-  btn.textContent = '🔒 پایان یافته';
-  // pointer bounce
-  ptrEl.classList.remove('bounce'); void ptrEl.offsetWidth; ptrEl.classList.add('bounce');
-  var w = parts[spinWinner] || {name:'?'};
-  resEl.innerHTML = '<div class="wlbl">برنده قرعه‌کشی</div>'+
-    '<div class="wname">🎉 '+esc(w.name)+' 🎉</div>'+
-    '<div class="wsent">✅ در حال ارسال خودکار جایزه...</div>';
-  if (tg && tg.HapticFeedback) { try{ tg.HapticFeedback.notificationOccurred('success'); }catch(e){} }
-  confetti();
-  // fire spinEnd (single event) + auto-deliver
-  try {
-    var ev = new CustomEvent('spinEnd', {detail:{index:spinWinner}});
-    window.dispatchEvent(ev);
-  } catch(e){}
-  setTimeout(function(){
-    if (tg) {
-      try {
-        tg.sendData(JSON.stringify({action:'lottery_winner', idx:spinWinner, uid:w.uid||'', name:w.name}));
-        var s=resEl.querySelector('.wsent'); if(s) s.textContent='✅ جایزه خودکار ارسال شد';
-      } catch(e){}
-    }
-  }, 1500);
-}
-
-/* ---- visibility: never leave stuck ---- */
-document.addEventListener('visibilitychange', function(){
-  if (!document.hidden && spinning && !spinEndFired) {
-    // rAF may have stalled; recompute from performance.now()
-    cancelAnimationFrame(rafId);
-    var now = performance.now();
-    var t = now - spinT0, p = Math.min(t/SPIN_MS, 1);
-    if (p >= 1) { finishSpin(); }
-    else { rafId = requestAnimationFrame(frame); }
+  /* حلقه نور برنده */
+  if(done&&!spinning){
+    const wa=angle+(WIN+.5)*SEG;
+    ctx.save();ctx.rotate(wa);
+    ctx.strokeStyle='#ffe98a';ctx.lineWidth=4;ctx.shadowColor='#ffd700';ctx.shadowBlur=22;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R-4, -SEG/2,SEG/2);ctx.closePath();ctx.stroke();ctx.restore();
   }
-});
+  ctx.restore();
+}
+let done=false;
+'use strict';
+/* ============================================================
+   بخش ۳ — فیزیک چرخش، صدا، کانفتی، مودال برنده
+   ============================================================ */
+const ptr=$('#ptr'),btn=$('#spinBtn'),res=$('#res'),tmr=$('#tmr');
+const easeOutQuint=t=>1-Math.pow(1-t,5);
 
-/* ============ CONFETTI ============ */
-function confetti(){
-  var colors=['#ffd700','#ff6b6b','#4CAF50','#3498db','#e67e22','#9b59b6'];
-  for (var i=0;i<70;i++){
-    (function(i){
-      var c=document.createElement('div');
-      c.className='cfetti';
-      var sz=5+Math.random()*7;
-      c.style.cssText='left:'+(Math.random()*100)+'vw;width:'+sz+'px;height:'+(sz*1.4)+'px;background:'+colors[i%colors.length]+';animation:cfall '+(2+Math.random()*2.2)+'s ease-in forwards;';
-      document.body.appendChild(c);
-      setTimeout(function(){c.remove();}, 4800);
-    })(i);
-  }
+/* محاسبه زاویه نهایی: سگمنت برنده زیر عقربه (بالا = -۹۰ درجه) */
+function targetAngle(){
+  const pointer=-Math.PI/2;
+  const segCenter=(WIN+.5)*SEG;
+  /* می‌خواهیم: curAngle + rot + segCenter ≡ pointer (mod 2π) */
+  let need=pointer-segCenter-curAngle;
+  need=((need% (Math.PI*2))+Math.PI*2)%(Math.PI*2);
+  /* کمی تصادفی داخل سگمنت (نه لبه) برای طبیعی‌بودن */
+  const jitter=(Math.random()-.5)*SEG*.5;
+  const spins=(5+Math.floor(Math.random()*3))*Math.PI*2;
+  return curAngle+spins+need+jitter;
 }
 
-/* ============ SPIN BUTTON ============ */
-btn.addEventListener('click', function(){
-  if (spinning || locked) return;         // anti double-click
-  ensureAudio();
-  try { localStorage.setItem(lockKey,'1'); } catch(e){}   // lock at START
-  locked = true; spinning = true; spinEndFired = false; lastTickSeg = -1;
-  btn.disabled = true; btn.textContent = '⏳ در حال چرخش...';
-  resEl.innerHTML = '<div class="wlbl">در حال برگزاری قرعه‌کشی...</div>';
+function spin(){
+  if(spinning||done)return;
+  spinning=true;btn.disabled=true;res.innerHTML='';tmr.textContent='';
+  haptic('medium');
+  const from=curAngle,to=targetAngle(),dur=8000+Math.random()*2000,t0=performance.now();
+  lastTickSeg=Math.floor(((from% (Math.PI*2))+Math.PI*2)%(Math.PI*2)/SEG);
+  function frame(now){
+    const t=Math.min(1,(now-t0)/dur),e=easeOutQuint(t);
+    curAngle=from+(to-from)*e;
+    /* تیک صدا + لرزش عقربه هنگام عبور از مرز سگمنت */
+    const seg=Math.floor((((curAngle% (Math.PI*2))+Math.PI*2)%(Math.PI*2))/SEG);
+    if(seg!==lastTickSeg){lastTickSeg=seg;Snd.tick(.4+.6*(1-t));
+      ptr.classList.remove('hit');void ptr.offsetWidth;ptr.classList.add('hit');}
+    /* شمارش معکوس */
+    const left=Math.ceil((dur-(now-t0))/1000);
+    if(left>0)tmr.textContent='⏳ '+faNum(left)+' ثانیه تا اعلام برنده';
+    drawWheel(curAngle);
+    if(t<1)requestAnimationFrame(frame);else finish();
+  }
+  requestAnimationFrame(frame);
+}
 
-  /* ---- "SERVER-SIDE" prize decision BEFORE spin ---- */
-  var buf = new Uint32Array(1);
-  try { (window.crypto||window.msCrypto).getRandomValues(buf); }
-  catch(e){ buf[0]=Math.floor(Math.random()*4294967296); }
-  spinWinner = buf[0] % N;
+function finish(){
+  spinning=false;done=true;tmr.textContent='';
+  curAngle=curAngle%(Math.PI*2);drawWheel(curAngle);
+  const w=P[WIN];
+  Snd.fanfare();haptic('success');
+  launchConfetti();
+  /* نمایش نتیجه */
+  res.innerHTML=`<div class="wl">✨ برنده قرعه‌کشی ✨</div><div class="wn">${esc(w.name)}</div>
+    <div class="ws">✅ نتیجه برای ربات ارسال شد</div>`;
+  /* مودال */
+  $('#mName').textContent=w.name;
+  const dt=new Date();
+  $('#mDetail').innerHTML=`جایزه: <b>${esc(payload.prize||'قرعه‌کشی هفتگی')}</b><br>آیدی: <b>${faNum(w.uid||'—')}</b><br>تاریخ: <b>${dt.toLocaleDateString('fa-IR')}</b> — ساعت <b>${dt.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}</b>`;
+  setTimeout(()=>$('#modal').classList.add('show'),650);
+  markUsed();
+  /* ارسال به ربات */
+  try{tg&&tg.sendData(JSON.stringify({action:'lottery_winner',lotto_id:payload.id,
+    winner_idx:WIN,uid:w.uid,name:w.name,token:rawT,ts:Math.floor(Date.now()/1000)}));}catch(e){}
+}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+$('#mclose').onclick=()=>$('#modal').classList.remove('show');
+btn.onclick=spin;
 
-  /* ---- exact final rotation: pointer (top = -90°) lands mid-segment ---- */
-  var targetMid = (Math.PI*2) - (spinWinner*arc + arc/2) - Math.PI/2;
-  var norm = ((targetMid - angle) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
-  spinStartAngle = angle;
-  spinTotal = EXTRA_ROUNDS * Math.PI*2 + norm;
+/* ---------- کانفتی (Canvas، سبک و بهینه) ---------- */
+const cfx=$('#cfx'),cx=cfx.getContext('2d');let parts=[],cfRun=false;
+function sizeCfx(){cfx.width=innerWidth;cfx.height=innerHeight;}
+function launchConfetti(){
+  sizeCfx();parts=[];
+  const colors=['#ffd700','#ffefa0','#00e5ff','#ff5b6e','#3ddc84','#fff','#c9a227'];
+  for(let i=0;i<160;i++)parts.push({x:Math.random()*cfx.width,y:-20-Math.random()*cfx.height*.4,
+    w:5+Math.random()*7,h:8+Math.random()*8,c:colors[i%colors.length],
+    vy:2+Math.random()*3.5,vx:-1.5+Math.random()*3,r:Math.random()*Math.PI,vr:-.1+Math.random()*.2});
+  if(!cfRun){cfRun=true;cfFrame();}
+  setTimeout(()=>{parts=[];},7000);
+}
+function cfFrame(){
+  cx.clearRect(0,0,cfx.width,cfx.height);
+  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+    cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore();}
+  if(parts.length)requestAnimationFrame(cfFrame);else{cfRun=false;cx.clearRect(0,0,cfx.width,cfx.height);}
+}
+'use strict';
+/* ============================================================
+   بخش ۴ — تالار برندگان، مقداردهی اولیه
+   ============================================================ */
+let winnersCache=null,winnersTs=0;
+async function loadWinners(){
+  /* کش هوشمند ۵ دقیقه‌ای */
+  if(winnersCache&&Date.now()-winnersTs<3e5)return winnersCache;
+  try{const r=await fetch('winners.json?_='+Date.now(),{cache:'no-store'});
+    if(r.ok){winnersCache=await r.json();winnersTs=Date.now();return winnersCache;}}catch(e){}
+  return [];
+}
+function renderWinners(kind){
+  loadWinners().then(all=>{
+    const now=new Date();now.setHours(0,0,0,0);
+    const ws=new Date(now);ws.setDate(ws.getDate()-((ws.getDay()+6)%7)); /* دوشنبه شروع هفته */
+    const ms=new Date(now.getFullYear(),now.getMonth(),1);
+    let f=all.filter(w=>(w.ts||0)*1000>=now.getTime());
+    if(kind==='week')f=all.filter(w=>(w.ts||0)*1000>=ws.getTime());
+    if(kind==='month')f=all.filter(w=>(w.ts||0)*1000>=ms.getTime());
+    f=f.slice(-20).reverse();
+    const box=$('#wlist');
+    if(!f.length){box.innerHTML='<div class="wempty">هنوز برنده‌ای ثبت نشده 🏆</div>';return;}
+    box.innerHTML=f.map((w,i)=>{
+      const rk=i<3?`r${i+1}`:'';
+      return `<div class="wrow" style="animation-delay:${i*40}ms">
+        <div class="rk ${rk}">${faNum(i+1)}</div>
+        <div class="inf"><div class="nm">${esc(w.name||'؟')}</div>
+        <div class="mt">${faDate(w.ts||0)} • ${faTime(w.ts||0)}</div></div>
+        <div class="prz">${esc(w.prize||'')}</div></div>`;}).join('');
+  });
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');renderWinners(t.dataset.k);});
 
-  spinT0 = performance.now();
-  rafId = requestAnimationFrame(frame);
-});
+/* دکمه صدا */
+$('#sndTog').onclick=e=>{const on=Snd.toggle();e.target.textContent=on?'🔊 صدا روشن':'🔇 صدا خاموش';
+  e.target.classList.toggle('on',on);};
+
+/* متا */
+$('#prizeLbl').textContent='🏆 '+ (payload.prize||'برنده خوش‌شانس این دوره');
+$('#metaLine').textContent=`${faNum(N)} شرکت‌کننده • ${faDate(payload.ts||Date.now()/1000)}`;
+
+/* مقداردهی */
+(async()=>{
+  if(await alreadyUsed()){
+    showState('✅','این قرعه‌کشی قبلاً انجام شده است','نتیجه قبلاً ثبت و برای ربات ارسال شده.');return;}
+  $('#app').style.display='flex';$('#stateBox').innerHTML='';
+  sizeCanvas();drawWheel(0);renderWinners('day');
+  addEventListener('resize',()=>{sizeCanvas();sizeCfx();});
+  /* چرخش آرام معرفی (idle) */
+  let idle=true;btn.addEventListener('click',()=>idle=false,{once:true});
+  (function idleSpin(){if(!idle||spinning||done)return;
+    curAngle+=.0018;drawWheel(curAngle);requestAnimationFrame(idleSpin);})();
 })();
 </script>
 </body>
