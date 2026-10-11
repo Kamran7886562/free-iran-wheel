@@ -570,6 +570,20 @@ function initCountdown(){
   $('#app').classList.add('show');$('#stateBox').innerHTML='';
   initCountdown();
   sizeCanvas();drawWheel(0);renderWinners('day');
+  /* فقط ادمین حق چرخش دارد */
+  try{
+    const viewerId=window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initDataUnsafe&&Telegram.WebApp.initDataUnsafe.user
+      ?String(Telegram.WebApp.initDataUnsafe.user.id):null;
+    const adminId=payload.admin?String(payload.admin):null;
+    if(adminId&&viewerId&&viewerId!==adminId){
+      btn.disabled=true;btn.textContent='👁️ فقط مشاهده';
+      btn.style.opacity='.5';btn.style.cursor='not-allowed';
+      dlog('auth',true,'حالت فقط-مشاهده برای کاربر '+viewerId);
+    }else if(adminId&&!viewerId){
+      // خارج از تلگرام — اجازه مشاهده ولی نه چرخش نهایی
+      dlog('auth',false,'خارج از تلگرام');
+    }
+  }catch(e){dlog('auth',false,'خطا در تشخیص کاربر: '+e.message);}
   document.querySelectorAll('.lb-tab').forEach(t=>t.onclick=()=>{
     document.querySelectorAll('.lb-tab').forEach(x=>x.classList.remove('on'));
     t.classList.add('on');renderLB(t.dataset.k);});
