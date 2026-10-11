@@ -248,6 +248,19 @@ const Snd=(()=>{let ctx=null,on=true;
   return{tick,fanfare,toggle:()=>on=!on,get on(){return on}};
 })();
 
+/* ---------- تشخیص محیط و لاگ تشخیصی ---------- */
+const ENV={
+  isTelegram:!!(window.Telegram&&window.Telegram.WebApp),
+  isGitHubPages:location.hostname.includes('github.io'),
+  url:location.href.split('?')[0],
+  params:Object.fromEntries(new URLSearchParams(location.search).entries()),
+};
+function dlog(stage,ok,detail){
+  console.log(`[Wheel:${stage}] ${ok?'✅':'❌'} ${detail||''}`);
+  console.log(`[Wheel:${stage}] env=tg:${ENV.isTelegram} gh:${ENV.isGitHubPages} params=`,ENV.params);
+}
+dlog('init',true,'شروع');
+
 /* ---------- توکن ---------- */
 const qs=new URLSearchParams(location.search);
 const rawT=qs.get('t');
@@ -264,8 +277,9 @@ let SEG=0;function calcSEG(){SEG=N>0?Math.PI*2/N:0;}
 if(payload&&payload.v===1&&Array.isArray(payload.p)&&payload.p.length){
   P=payload.p.map(x=>({name:String(x[0]||'؟').slice(0,28),uid:String(x[1]||'')})); 
   WIN=payload.w|0;N=P.length;USED_KEY='lotto_used_'+payload.n;
+  dlog('token',true,`توکن معتبر: ${N} شرکت‌کننده`);
 }else if(qs.get('live')==='1'){
-  LIVE_MODE=true; // حالت زنده: از leaderboard.json
+  LIVE_MODE=true;dlog('mode',true,'حالت زنده (live)'); // حالت زنده: از leaderboard.json
 }else if(!payload){
   showState('🔗','لینک گردونه نامعتبر است','از ربات تلگرام وارد شوید.');throw new Error('bad token');
 }else{
@@ -557,9 +571,15 @@ async function initLiveMode(){
     P=top.map(u=>({name:String(u.name||'؟').slice(0,28),uid:String(u.uid||'')}));
     N=P.length;WIN=-1;USED_KEY='live_mode_no_spin';
     calcSEG();
+    dlog('live-load',true,`${N} نفر از دیتابیس خوانده شد`);
   }catch(e){
-    showState('⚠️','خطا در دریافت اطلاعات','اتصال اینترنت را بررسی کنید و دوباره تلاش کنید.');
-    throw new Error('live load failed');
+    dlog('live-fetch',false,'خطا: '+(e.message||e));
+    const isNet=e.message&&e.message.includes('fetch');
+    showState('⚠️',
+      isNet?'خطا در اتصال به سرور':'خطا در دریافت اطلاعات',
+      isNet?'سرور در دسترس نیست. اتصال اینترنت را بررسی کنید و دوباره تلاش کنید.'
+            :'داده‌ای برای نمایش وجود ندارد. بعداً تلاش کنید.');
+    throw new Error('live load failed: '+(e.message||e));
   }
 }
 (async()=>{
