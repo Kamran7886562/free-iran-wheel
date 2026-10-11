@@ -18,7 +18,9 @@
   --neon:#00e5ff; --danger:#ff5b6e; --ok:#3ddc84;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
+html{overflow-x:hidden;scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+html,body{height:100%;max-width:100vw}
 body{
   font-family:'Vazirmatn',Tahoma,sans-serif;color:var(--txt);
   background:
@@ -39,7 +41,7 @@ body{
 .brand .sub{font-size:12px;color:var(--mut2);margin-top:2px}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
 /* ---------- استیج گردونه ---------- */
-.stage{position:relative;width:min(92vw,380px);height:min(92vw,380px);margin-top:6px}
+.stage{position:relative;width:min(80vw,340px);height:min(80vw,340px);margin-top:6px;flex:none;max-width:100%}
 /* هاله نور پشت گردونه */
 .stage::before{content:'';position:absolute;inset:-8%;border-radius:50%;
   background:radial-gradient(circle,rgba(255,215,0,.14),rgba(255,215,0,.03) 55%,transparent 70%);
@@ -71,7 +73,8 @@ body{
 .hub .t2{font-size:clamp(7px,2vw,9px);font-weight:700;color:#6b5310;letter-spacing:3px;margin-top:1px}
 .hub .lion{font-size:clamp(13px,4vw,17px);margin-bottom:1px}
 /* ---------- دکمه ---------- */
-#spinBtn{margin-top:26px;position:relative;padding:16px 64px;font-size:19px;font-weight:800;font-family:inherit;
+#spinBtn{margin-top:26px;position:relative;padding:16px 16px;font-size:19px;font-weight:800;font-family:inherit;
+  width:min(80vw,300px);max-width:100%;
   color:#231a02;background:linear-gradient(180deg,var(--gold-l),var(--gold) 45%,var(--gold-d));
   border:none;border-radius:60px;cursor:pointer;letter-spacing:.5px;
   box-shadow:0 10px 30px rgba(255,215,0,.32),inset 0 2px 4px rgba(255,255,255,.7),inset 0 -3px 6px rgba(120,85,0,.35);
